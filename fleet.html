@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fleet Manager — RR</title>
+<style>
+:root{--navy:#0f1b3d;--blue:#1A2A6C;--sky:#e8edf8;--green:#1a7a3c;--gbg:#e6f4ec;--amber:#b45309;--abg:#fef3c7;--red:#b91c1c;--rbg:#fee2e2;--purple:#6d28d9;--pbg:#ede9fe;--border:#e2e6f0;--bg:#f4f6fb;--w:#fff;--t:#0f1b3d;--t2:#4a5578;--t3:#8792ad;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--t);font-size:14px;}
+/* LAYOUT */
+.topbar{background:var(--blue);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar h1{font-size:16px;font-weight:600;}
+.topbar-right{display:flex;gap:8px;align-items:center;}
+.content{padding:12px 16px 80px;}
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--blue);display:flex;z-index:100;border-top:1px solid rgba(255,255,255,.1);}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;cursor:pointer;color:rgba(255,255,255,.5);font-size:10px;gap:2px;border-top:2px solid transparent;}
+.bni.active{color:#fff;border-top-color:#4a8fff;}
+.bni-icon{font-size:18px;}
+/* CARDS */
+.card{background:var(--w);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+.card-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+.mc{background:var(--w);border:1px solid var(--border);border-radius:10px;padding:12px;}
+.mc-l{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
+.mc-v{font-size:22px;font-weight:700;}
+/* VEHICLE LIST */
+.vlist{display:flex;flex-direction:column;gap:8px;}
+.vcard{background:var(--w);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;position:relative;}
+.vcard:active{background:var(--sky);}
+.vcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.vcard-reg{font-size:14px;font-weight:700;font-family:monospace;}
+.vcard-model{font-size:13px;color:var(--t2);}
+.vcard-client{font-size:12px;color:var(--t3);margin-top:2px;}
+.vcard-alerts{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+.badge{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:600;white-space:nowrap;}
+.b-green{background:var(--gbg);color:var(--green);}
+.b-amber{background:var(--abg);color:var(--amber);}
+.b-red{background:var(--rbg);color:var(--red);}
+.b-blue{background:#dbeafe;color:#1d4ed8;}
+.b-purple{background:var(--pbg);color:var(--purple);}
+.b-gray{background:var(--sky);color:var(--t2);}
+.b-snow{background:#e0f2fe;color:#0369a1;}
+/* ALERTS SECTION */
+.alert-item{background:var(--w);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
+.alert-icon{font-size:22px;flex-shrink:0;}
+.alert-body .ar{font-weight:600;font-size:13px;}
+.alert-body .ad{font-size:12px;color:var(--t2);margin-top:2px;}
+/* FORMS */
+.pg{display:none;}.pg.active{display:block;}
+input,select,textarea{font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid #c8d0e4;border-radius:8px;background:#fff;color:var(--t);outline:none;width:100%;}
+input:focus,select:focus{border-color:var(--blue);}
+.f{margin-bottom:12px;}
+.f label{font-size:13px;color:var(--t2);display:block;margin-bottom:4px;font-weight:500;}
+.f .hint{font-size:11px;color:var(--t3);margin-top:3px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{padding:10px 16px;border-radius:8px;border:1px solid #c8d0e4;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--t);}
+.btn-p{background:var(--blue);color:#fff;border-color:var(--blue);}
+.btn-d{color:var(--red);}
+.btn-full{width:100%;justify-content:center;}
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(15,27,61,.5);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .2s;}
+.mo.open{opacity:1;pointer-events:all;}
+.md{background:#fff;border-radius:16px 16px 0 0;padding:20px 16px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:transform .2s;}
+.mo.open .md{transform:translateY(0);}
+.md-title{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.md-close{font-size:22px;cursor:pointer;color:var(--t3);}
+.mf{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+/* REPORT */
+.rep-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.rep-row:last-child{border-bottom:none;}
+.rep-row .rn{color:var(--t2);}
+.rep-row .rv{color:var(--t);font-weight:500;}
+.rep-row.sum .rn,.rep-row.sum .rv{font-weight:700;font-size:14px;}
+.rep-row.pos .rv{color:var(--green);}
+.rep-row.neg .rv{color:var(--red);}
+/* SEARCH */
+.search-bar{display:flex;gap:8px;margin-bottom:12px;}
+.search-bar input{flex:1;}
+/* TIRES ALERT */
+.tire-banner{background:linear-gradient(135deg,#0369a1,#0284c7);color:#fff;border-radius:10px;padding:14px;margin-bottom:12px;display:none;}
+.tire-banner.show{display:block;}
+hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🚗 Fleet Manager</h1>
+  <div class="topbar-right">
+    <span id="tb_alerts" style="font-size:12px;background:rgba(255,255,255,.2);padding:3px 8px;border-radius:99px;cursor:pointer" onclick="showPg('upozorenja')">⚠️ <span id="tb_alert_count">0</span></span>
+    <button class="btn" style="padding:6px 10px;font-size:12px" onclick="exportBackup()">💾</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- PREGLED -->
+  <div class="pg active" id="pg-pregled">
+    <div id="tire_banner" class="tire-banner">
+      ❄️ <b>Obaveza zimskih guma!</b> Period zimskih guma je aktivan.<br>
+      <span id="tire_banner_info" style="font-size:12px;opacity:.85"></span>
+    </div>
+    <div class="metrics" id="metrics"></div>
+    <div id="alerts_preview"></div>
+  </div>
+
+  <!-- VOZILA -->
+  <div class="pg" id="pg-vozila">
+    <div class="search-bar">
+      <input id="sv" placeholder="Pretraži reg, model, klijent..." oninput="renderV()">
+      <button class="btn btn-p" onclick="openAddV()" style="white-space:nowrap">+ Vozilo</button>
+    </div>
+    <div class="f">
+      <select id="filter_v" onchange="renderV()">
+        <option value="">Sva vozila</option>
+        <option value="lizing">Lizing</option>
+        <option value="vlasnistvo">Vlasništvo</option>
+        <option value="alert">Sa upozorenjima</option>
+      </select>
+    </div>
+    <div id="vlist" class="vlist"></div>
+  </div>
+
+  <!-- UPOZORENJA -->
+  <div class="pg" id="pg-upozorenja">
+    <div id="alerts_list"></div>
+  </div>
+
+  <!-- IZVJEŠTAJI -->
+  <div class="pg" id="pg-izvjestaji">
+    <div class="f">
+      <label>Odaberi vozilo</label>
+      <select id="rep_voz" onchange="renderRep()">
+        <option value="">— Odaberi vozilo —</option>
+      </select>
+    </div>
+    <div id="rep_content"></div>
+  </div>
+
+  <!-- POSTAVKE -->
+  <div class="pg" id="pg-postavke">
+    <div class="card">
+      <div class="card-title">Backup podataka</div>
+      <button class="btn btn-p btn-full" onclick="exportBackup()" style="margin-bottom:8px">💾 Sačuvaj backup</button>
+      <label class="btn btn-full" style="cursor:pointer;justify-content:center">📂 Učitaj backup<input type="file" accept=".json" onchange="importBackup(this)" style="display:none"></label>
+    </div>
+    <div class="card">
+      <div class="card-title">O aplikaciji</div>
+      <div style="font-size:13px;color:var(--t2)">Fleet Manager — RR<br>Praćenje voznog parka</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="bni active" id="bn-pregled" onclick="showPg('pregled')"><div class="bni-icon">🏠</div>Pregled</div>
+  <div class="bni" id="bn-vozila" onclick="showPg('vozila')"><div class="bni-icon">🚗</div>Vozila</div>
+  <div class="bni" id="bn-upozorenja" onclick="showPg('upozorenja')"><div class="bni-icon">⚠️</div>Upozorenja</div>
+  <div class="bni" id="bn-izvjestaji" onclick="showPg('izvjestaji')"><div class="bni-icon">📊</div>Izvještaji</div>
+  <div class="bni" id="bn-postavke" onclick="showPg('postavke')"><div class="bni-icon">⚙️</div>Postavke</div>
+</nav>
+
+<!-- MODAL VOZILO -->
+<div class="mo" id="moV" onclick="if(event.target===this)closeM('moV')">
+<div class="md" onclick="event.stopPropagation()">
+  <div class="md-title">
+    <span id="moV_title">Dodaj vozilo</span>
+    <span class="md-close" onclick="closeM('moV')">✕</span>
+  </div>
+  <div class="row2">
+    <div class="f"><label>Registracija</label><input id="v_reg" placeholder="PG XX 000"></div>
+    <div class="f"><label>Model</label><input id="v_model" placeholder="VW Golf..."></div>
+    <div class="f"><label>Godište</label><input type="number" id="v_god" value="2022"></div>
+    <div class="f"><label>Tip vlasništva</label>
+      <select id="v_tip" onchange="toggleLizing()">
+        <option value="lizing">Lizing</option>
+        <option value="vlasnistvo">Vlasništvo</option>
+      </select>
+    </div>
+  </div>
+  <div class="f"><label>Klijent (pravno lice)</label><input id="v_klijent" placeholder="Naziv firme..."></div>
+  <div class="f"><label>Početak ugovora</label><input type="date" id="v_ugovor_od"></div>
+  <div class="f"><label>Kraj ugovora (zakup do)</label><input type="date" id="v_ugovor_do"></div>
+  <div class="f"><label>Mjesečna rata klijenta (€)</label><input type="number" step="0.01" id="v_rata_klijent" placeholder="0.00"></div>
+
+  <div id="lizing_sekcija">
+    <hr>
+    <div style="font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:10px">Lizing detalji</div>
+    <div class="row2">
+      <div class="f"><label>Lizing kompanija</label><input id="v_liz_komp" placeholder="Hypo, NLB..."></div>
+      <div class="f"><label>Lizing rata (€/mj)</label><input type="number" step="0.01" id="v_liz_rata" placeholder="0.00"></div>
+      <div class="f"><label>Kraj lizinga</label><input type="date" id="v_liz_do"></div>
+      <div class="f"><label>Ostatak duga (€)</label><input type="number" step="0.01" id="v_liz_dug" placeholder="0.00"></div>
+    </div>
+  </div>
+
+  <hr>
+  <div style="font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:10px">Troškovi (godišnje €)</div>
+  <div class="row2">
+    <div class="f"><label>Registracija (€/god)</label><input type="number" step="0.01" id="v_reg_c" placeholder="0"></div>
+    <div class="f"><label>Kasko (€/god)</label><input type="number" step="0.01" id="v_kasko" placeholder="0"></div>
+    <div class="f"><label>Servis redovni (€/god)</label><input type="number" step="0.01" id="v_servis" placeholder="0"></div>
+    <div class="f"><label>Gume (€/god)</label><input type="number" step="0.01" id="v_gume" placeholder="0"></div>
+    <div class="f"><label>Ostalo (€/god)</label><input type="number" step="0.01" id="v_ostalo" placeholder="0"></div>
+  </div>
+
+  <hr>
+  <div style="font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:10px">Datumi isteka</div>
+  <div class="row2">
+    <div class="f"><label>Registracija važi do</label><input type="date" id="v_reg_do"></div>
+    <div class="f"><label>Kasko važi do</label><input type="date" id="v_kasko_do"></div>
+    <div class="f"><label>Sljedeći servis</label><input type="date" id="v_servis_do"></div>
+    <div class="f"><label>Napomena</label><input id="v_nap" placeholder="..."></div>
+  </div>
+
+  <div class="mf">
+    <button class="btn btn-d" id="v_del_btn" onclick="delV()" style="display:none">🗑 Briši</button>
+    <div style="display:flex;gap:8px;margin-left:auto">
+      <button class="btn" onclick="closeM('moV')">Otkazi</button>
+      <button class="btn btn-p" onclick="saveV()">Sačuvaj</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+var vozila=[], editVId=null;
+
+function pad(n){return String(n).padStart(2,'0');}
+function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function addDays(d,n){var dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());}
+function daysDiff(d){if(!d)return999;return Math.round((new Date(d)-new Date(today()))/86400000);}
+function eur(n){return '€'+Number(n||0).toLocaleString('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fv(id){return parseFloat(document.getElementById(id).value)||0;}
+function sv2(id){return document.getElementById(id).value.trim();}
+
+// STORAGE
+function save(){try{localStorage.setItem('fleet_v',JSON.stringify(vozila));}catch(e){}}
+function load(){
+  try{vozila=JSON.parse(localStorage.getItem('fleet_v')||'[]');}
+  catch(e){vozila=[];}
+  init();
+}
+function exportBackup(){
+  var b=new Blob([JSON.stringify({vozila:vozila,ts:new Date().toISOString()},null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fleet_backup_'+today()+'.json';a.click();
+}
+function importBackup(inp){
+  var f=inp.files[0];if(!f)return;
+  var fr=new FileReader();
+  fr.onload=function(e){
+    try{
+      var d=JSON.parse(e.target.result);
+      if(!d.vozila)return alert('Neispravan backup!');
+      if(!confirm('Zamijeniti sve podatke?'))return;
+      vozila=d.vozila;save();init();alert('Backup učitan!');
+    }catch(ex){alert('Greška: '+ex.message);}
+  };
+  fr.readAsText(f);inp.value='';
+}
+
+// ALERTS
+function getAlerts(v){
+  var now=today(),alerts=[];
+  var dd=daysDiff(v.reg_do);
+  if(v.reg_do){if(dd<0)alerts.push({tip:'reg',tekst:'Istekla registracija',boja:'red',days:dd});else if(dd<=30)alerts.push({tip:'reg',tekst:'Registracija ističe za '+dd+'d',boja:'amber',days:dd});}
+  var dk=daysDiff(v.kasko_do);
+  if(v.kasko_do){if(dk<0)alerts.push({tip:'kasko',tekst:'Istekao kasko',boja:'red',days:dk});else if(dk<=30)alerts.push({tip:'kasko',tekst:'Kasko ističe za '+dk+'d',boja:'amber',days:dk});}
+  var ds=daysDiff(v.servis_do);
+  if(v.servis_do){if(ds<0)alerts.push({tip:'servis',tekst:'Servis zakašnjel',boja:'red',days:ds});else if(ds<=14)alerts.push({tip:'servis',tekst:'Servis za '+ds+'d',boja:'amber',days:ds});}
+  var dl=daysDiff(v.liz_do);
+  if(v.liz_do&&v.tip==='lizing'){if(dl<0)alerts.push({tip:'lizing',tekst:'Lizing istekao',boja:'red',days:dl});else if(dl<=60)alerts.push({tip:'lizing',tekst:'Lizing ističe za '+dl+'d',boja:'amber',days:dl});}
+  var du=daysDiff(v.ugovor_do);
+  if(v.ugovor_do){if(du<0)alerts.push({tip:'ugovor',tekst:'Ugovor istekao',boja:'red',days:du});else if(du<=60)alerts.push({tip:'ugovor',tekst:'Ugovor ističe za '+du+'d',boja:'amber',days:du});}
+  // Gume
+  var m=new Date().getMonth()+1,d2=new Date().getDate();
+  var zimske=(m===11&&d2>=15)||m===12||m<=3||(m===4&&d2<1);
+  if(zimske)alerts.push({tip:'gume',tekst:'Zimske gume obavezne',boja:'snow',days:0});
+  return alerts;
+}
+function isTiresSeason(){var m=new Date().getMonth()+1,d=new Date().getDate();return(m===11&&d>=15)||m===12||m<=3||(m===4&&d<1);}
+
+// INIT
+function init(){
+  renderMetrics();renderAlerts();renderAlertsPage();renderV();buildRepSelect();checkTires();
+  var tc=vozila.reduce(function(s,v){return s+getAlerts(v).length;},0);
+  document.getElementById('tb_alert_count').textContent=tc;
+}
+function checkTires(){
+  var b=document.getElementById('tire_banner');
+  if(isTiresSeason()){
+    b.classList.add('show');
+    document.getElementById('tire_banner_info').textContent='Zimske gume obavezne od 15.11 do 01.04 — provjeri sva vozila!';
+  }else{
+    b.classList.remove('show');
+  }
+}
+function renderMetrics(){
+  var tot=vozila.length,liz=vozila.filter(function(v){return v.tip==='lizing';}).length;
+  var alerts=vozila.filter(function(v){return getAlerts(v).some(function(a){return a.boja==='red';});}).length;
+  var warn=vozila.filter(function(v){return getAlerts(v).some(function(a){return a.boja==='amber';});}).length;
+  document.getElementById('metrics').innerHTML=
+    mc('Ukupno vozila',tot,'#1A2A6C')+
+    mc('Na lizingu',liz,'#6d28d9')+
+    mc('Hitna upozorenja',alerts,'#b91c1c')+
+    mc('Upozorenja',warn,'#b45309');
+}
+function mc(l,v,c,s){return'<div class="mc"><div class="mc-l">'+l+'</div><div class="mc-v" style="color:'+c+'">'+v+'</div></div>';}
+function renderAlerts(){
+  var all=[];
+  vozila.forEach(function(v){getAlerts(v).filter(function(a){return a.boja==='red';}).forEach(function(a){all.push({v:v,a:a});});});
+  var el=document.getElementById('alerts_preview');
+  if(!all.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--t3)">✅ Nema hitnih upozorenja</div>';return;}
+  el.innerHTML='<div style="font-size:12px;font-weight:600;color:var(--red);text-transform:uppercase;margin-bottom:8px">🚨 Hitna upozorenja ('+all.length+')</div>'+
+    all.slice(0,5).map(function(x){
+      return'<div class="alert-item"><div class="alert-icon">🚨</div><div class="alert-body"><div class="ar">'+x.v.reg+' — '+x.v.model+'</div><div class="ad">'+x.a.tekst+(x.v.klijent?' · '+x.v.klijent:'')+'</div></div></div>';
+    }).join('')+(all.length>5?'<div style="text-align:center;font-size:12px;color:var(--t3);padding:8px">+ još '+(all.length-5)+' upozorenja</div>':'');
+}
+function renderAlertsPage(){
+  var all=[];
+  vozila.forEach(function(v){
+    getAlerts(v).forEach(function(a){all.push({v:v,a:a});});
+  });
+  all.sort(function(x,y){return x.a.days-y.a.days;});
+  var el=document.getElementById('alerts_list');
+  if(!all.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--t3);padding:30px">✅ Nema upozorenja</div>';return;}
+  var icons={reg:'📋',kasko:'🛡️',servis:'🔧',lizing:'🏦',ugovor:'📄',gume:'❄️'};
+  el.innerHTML=all.map(function(x){
+    var boja=x.a.boja==='red'?'#b91c1c':x.a.boja==='snow'?'#0369a1':'#b45309';
+    return'<div class="alert-item" style="border-left:3px solid '+boja+'">'
+      +'<div class="alert-icon">'+(icons[x.a.tip]||'⚠️')+'</div>'
+      +'<div class="alert-body" style="flex:1">'
+      +'<div class="ar">'+x.v.reg+' — '+x.v.model+'</div>'
+      +'<div class="ad" style="color:'+boja+'">'+x.a.tekst+'</div>'
+      +(x.v.klijent?'<div class="ad">👔 '+x.v.klijent+'</div>':'')
+      +'</div>'
+      +'<button class="btn" style="padding:4px 8px;font-size:12px" onclick="editV('+x.v.id+')">✏️</button>'
+      +'</div>';
+  }).join('');
+}
+
+// VOZILA RENDER
+function bcolor(days,tip){if(!tip)return'b-gray';if(days<0)return'b-red';if(days<=30)return'b-amber';return'b-green';}
+function renderV(){
+  var sv=document.getElementById('sv').value.toLowerCase();
+  var fv2=document.getElementById('filter_v').value;
+  var list=vozila.filter(function(v){
+    if(sv&&!v.reg.toLowerCase().includes(sv)&&!(v.model||'').toLowerCase().includes(sv)&&!(v.klijent||'').toLowerCase().includes(sv))return false;
+    if(fv2==='lizing'&&v.tip!=='lizing')return false;
+    if(fv2==='vlasnistvo'&&v.tip!=='vlasnistvo')return false;
+    if(fv2==='alert'&&!getAlerts(v).length)return false;
+    return true;
+  });
+  var el=document.getElementById('vlist');
+  if(!list.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--t3);padding:30px">Nema vozila</div>';return;}
+  el.innerHTML=list.map(function(v){
+    var al=getAlerts(v);
+    var profMj=Number(v.rata_klijent||0)-(Number(v.liz_rata||0)+(Number(v.reg_c||0)+Number(v.kasko||0)+Number(v.servis||0)+Number(v.gume||0)+Number(v.ostalo||0))/12);
+    return'<div class="vcard" onclick="editV('+v.id+')">'
+      +'<div class="vcard-top">'
+      +'<div><div class="vcard-reg">'+v.reg+'</div><div class="vcard-model">'+v.model+(v.god?' · '+v.god:'')+'</div></div>'
+      +'<span class="badge '+(v.tip==='lizing'?'b-purple':'b-blue')+'">'+(v.tip==='lizing'?'Lizing':'Vlastito')+'</span>'
+      +'</div>'
+      +(v.klijent?'<div class="vcard-client">👔 '+v.klijent+(v.ugovor_do?' · do '+v.ugovor_do:'')+'</div>':'')
+      +'<div style="font-size:12px;margin-top:4px;display:flex;gap:12px">'
+      +(v.rata_klijent?'<span>💰 '+eur(v.rata_klijent)+'/mj</span>':'')
+      +(v.liz_rata?'<span style="color:var(--t3)">Lizing: '+eur(v.liz_rata)+'/mj</span>':'')
+      +(v.rata_klijent?'<span style="color:'+(profMj>=0?'var(--green)':'var(--red))') +'">'+( profMj>=0?'+':'')+eur(profMj)+'/mj</span>':'')
+      +'</div>'
+      +(al.length?'<div class="vcard-alerts">'+al.map(function(a){return'<span class="badge b-'+(a.boja==='snow'?'snow':a.boja==='red'?'red':'amber')+'">'+a.tekst+'</span>';}).join('')+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+// VOZILO MODAL
+function toggleLizing(){
+  var liz=document.getElementById('v_tip').value==='lizing';
+  document.getElementById('lizing_sekcija').style.display=liz?'block':'none';
+}
+function openAddV(){
+  editVId=null;
+  document.getElementById('moV_title').textContent='Dodaj vozilo';
+  document.getElementById('v_del_btn').style.display='none';
+  ['v_reg','v_model','v_klijent','v_liz_komp','v_nap'].forEach(function(id){document.getElementById(id).value='';});
+  ['v_god','v_rata_klijent','v_liz_rata','v_liz_dug','v_reg_c','v_kasko','v_servis','v_gume','v_ostalo'].forEach(function(id){document.getElementById(id).value='';});
+  ['v_ugovor_od','v_ugovor_do','v_liz_do','v_reg_do','v_kasko_do','v_servis_do'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('v_tip').value='lizing';
+  document.getElementById('v_god').value=new Date().getFullYear();
+  toggleLizing();
+  document.getElementById('moV').classList.add('open');
+}
+function editV(id){
+  var v=vozila.find(function(x){return x.id===id;});if(!v)return;
+  editVId=id;
+  document.getElementById('moV_title').textContent='Uredi — '+v.reg;
+  document.getElementById('v_del_btn').style.display='';
+  document.getElementById('v_reg').value=v.reg||'';
+  document.getElementById('v_model').value=v.model||'';
+  document.getElementById('v_god').value=v.god||'';
+  document.getElementById('v_tip').value=v.tip||'lizing';
+  document.getElementById('v_klijent').value=v.klijent||'';
+  document.getElementById('v_ugovor_od').value=v.ugovor_od||'';
+  document.getElementById('v_ugovor_do').value=v.ugovor_do||'';
+  document.getElementById('v_rata_klijent').value=v.rata_klijent||'';
+  document.getElementById('v_liz_komp').value=v.liz_komp||'';
+  document.getElementById('v_liz_rata').value=v.liz_rata||'';
+  document.getElementById('v_liz_do').value=v.liz_do||'';
+  document.getElementById('v_liz_dug').value=v.liz_dug||'';
+  document.getElementById('v_reg_c').value=v.reg_c||'';
+  document.getElementById('v_kasko').value=v.kasko||'';
+  document.getElementById('v_servis').value=v.servis||'';
+  document.getElementById('v_gume').value=v.gume||'';
+  document.getElementById('v_ostalo').value=v.ostalo||'';
+  document.getElementById('v_reg_do').value=v.reg_do||'';
+  document.getElementById('v_kasko_do').value=v.kasko_do||'';
+  document.getElementById('v_servis_do').value=v.servis_do||'';
+  document.getElementById('v_nap').value=v.nap||'';
+  toggleLizing();
+  document.getElementById('moV').classList.add('open');
+}
+function saveV(){
+  var reg=document.getElementById('v_reg').value.trim();
+  if(!reg)return alert('Unesite registraciju!');
+  var obj={
+    id:editVId||(vozila.length?Math.max.apply(null,vozila.map(function(x){return x.id;}))+1:1),
+    reg:reg,model:sv2('v_model'),god:parseInt(document.getElementById('v_god').value)||0,
+    tip:sv2('v_tip'),klijent:sv2('v_klijent'),
+    ugovor_od:sv2('v_ugovor_od'),ugovor_do:sv2('v_ugovor_do'),
+    rata_klijent:fv('v_rata_klijent'),
+    liz_komp:sv2('v_liz_komp'),liz_rata:fv('v_liz_rata'),
+    liz_do:sv2('v_liz_do'),liz_dug:fv('v_liz_dug'),
+    reg_c:fv('v_reg_c'),kasko:fv('v_kasko'),servis:fv('v_servis'),
+    gume:fv('v_gume'),ostalo:fv('v_ostalo'),
+    reg_do:sv2('v_reg_do'),kasko_do:sv2('v_kasko_do'),
+    servis_do:sv2('v_servis_do'),nap:sv2('v_nap')
+  };
+  if(editVId){var i=vozila.findIndex(function(x){return x.id===editVId;});vozila[i]=obj;}
+  else vozila.push(obj);
+  closeM('moV');save();init();
+}
+function delV(){
+  if(!editVId||!confirm('Obrisati vozilo?'))return;
+  vozila=vozila.filter(function(v){return v.id!==editVId;});
+  closeM('moV');save();init();
+}
+
+// IZVJEŠTAJI
+function buildRepSelect(){
+  document.getElementById('rep_voz').innerHTML='<option value="">— Odaberi vozilo —</option>'+
+    vozila.map(function(v){return'<option value="'+v.id+'">'+v.reg+' — '+(v.model||'')+' '+(v.klijent?'('+v.klijent+')':'')+'</option>';}).join('');
+}
+function renderRep(){
+  var vid=parseInt(document.getElementById('rep_voz').value);
+  var el=document.getElementById('rep_content');
+  if(!vid){el.innerHTML='';return;}
+  var v=vozila.find(function(x){return x.id===vid;});if(!v){el.innerHTML='';return;}
+  var godTros=(v.reg_c||0)+(v.kasko||0)+(v.servis||0)+(v.gume||0)+(v.ostalo||0);
+  var mesTros=(v.liz_rata||0)+godTros/12;
+  var mesProfit=(v.rata_klijent||0)-mesTros;
+  var rows=[
+    ['Registracija',v.reg,''],['Model',v.model||'—',''],['Godište',v.god||'—',''],
+    ['Vlasništvo',v.tip==='lizing'?'Lizing':'Vlastito',''],
+    ['Klijent',v.klijent||'—',''],
+    ['Ugovor',( v.ugovor_od||'')+(v.ugovor_do?' → '+v.ugovor_do:''),''],
+    ['hr','',''],
+    ['Rata klijenta / mj',eur(v.rata_klijent||0),''],
+    v.tip==='lizing'?['Lizing rata / mj',eur(v.liz_rata||0),'']:null,
+    v.tip==='lizing'?['Lizing kompanija',v.liz_komp||'—','']:null,
+    v.tip==='lizing'?['Lizing do',v.liz_do||'—','']:null,
+    v.tip==='lizing'?['Ostatak duga',eur(v.liz_dug||0),'']:null,
+    ['hr','',''],
+    ['Registracija (god)',eur(v.reg_c||0),''],
+    ['Kasko (god)',eur(v.kasko||0),''],
+    ['Servis redovni (god)',eur(v.servis||0),''],
+    ['Gume (god)',eur(v.gume||0),''],
+    ['Ostalo (god)',eur(v.ostalo||0),''],
+    ['Ukupni godišnji troškovi',eur(godTros),'sum'],
+    ['Ukupni trošak / mj',eur(mesTros),'sum'],
+    ['hr','',''],
+    ['Neto profit / mj',eur(mesProfit),mesProfit>=0?'pos':'neg'],
+    ['Neto profit / god',eur(mesProfit*12),mesProfit>=0?'pos':'neg'],
+    ['hr','',''],
+    ['Registracija važi do',v.reg_do||'—',''],
+    ['Kasko važi do',v.kasko_do||'—',''],
+    ['Sljedeći servis',v.servis_do||'—',''],
+    v.nap?['Napomena',v.nap,'']:null,
+  ];
+  el.innerHTML='<div class="card">'+rows.filter(Boolean).map(function(r){
+    if(r[2]==='hr')return'<hr>';
+    return'<div class="rep-row '+r[2]+'"><span class="rn">'+r[0]+'</span><span class="rv">'+r[1]+'</span></div>';
+  }).join('')+'</div>';
+}
+
+// NAVIGATION
+function showPg(p){
+  document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('active');});
+  document.querySelectorAll('.bni').forEach(function(x){x.classList.remove('active');});
+  document.getElementById('pg-'+p).classList.add('active');
+  document.getElementById('bn-'+p).classList.add('active');
+  if(p==='vozila')renderV();
+  if(p==='upozorenja')renderAlertsPage();
+  if(p==='izvjestaji'){buildRepSelect();}
+}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.mo.open').forEach(function(m){m.classList.remove('open');});});
+
+load();
+</script>
+</body>
+</html>
