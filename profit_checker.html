@@ -8,11 +8,11 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f1b3d; color: #fff; padding: 20px 12px; }
     
-    /* Ova klasa sada drži kalkulator uvezanim na sredini ekrana i na laptopu */
+    /* Centriran i spakovan kontejner u RR plavom stilu */
     .container { max-width: 500px; margin: 0 auto; background: #0f1b3d; }
     
     .header { text-align: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #23356f; }
-    .header h1 { font-size: 22px; color: #fff; font-weight: 600; letter-spacing: 0.5px; }
+    .header h1 { font-size: 20px; color: #fff; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
     .header p { font-size: 12px; color: #8792ad; margin-top: 5px; }
     
     .card { background: #1a2a6c; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 1px solid #23356f; }
@@ -21,27 +21,24 @@
     .f { margin-bottom: 14px; }
     .f:last-child { margin-bottom: 0; }
     .f label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 5px; font-weight: 500; }
-    .f input { width: 100%; padding: 11px 14px; border: 1px solid #23356f; background: #0f1b3d; color: #fff; border-radius: 8px; font-size: 16px; font-family: inherit; outline: none; }
-    .f input:focus { border-color: #2d5be3; box-shadow: 0 0 5px rgba(45,91,227,0.4); }
+    .f input, .f select { width: 100%; padding: 11px 14px; border: 1px solid #23356f; background: #0f1b3d; color: #fff; border-radius: 8px; font-size: 16px; font-family: inherit; outline: none; }
+    .f input:focus, .f select:focus { border-color: #2d5be3; }
     
-    /* Semafor Status */
+    /* Veliki Semafor na vrhu */
     .status-box { text-align: center; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
     .status-safe { background: #1a7a3c; color: #fff; border: 2px solid #2ecc71; }
     .status-warning { background: #d35400; color: #fff; border: 2px solid #f39c12; }
     .status-danger { background: #c0392b; color: #fff; border: 2px solid #e74c3c; }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    /* Polja u kolonama */
     .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     
-    .metric { background: #0f1b3d; padding: 12px 8px; border-radius: 8px; text-align: center; border: 1px solid #23356f; }
-    .metric-label { font-size: 11px; color: #8792ad; margin-bottom: 6px; }
-    .metric-val { font-size: 18px; font-weight: 600; }
-    
-    .row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #23356f; font-size: 13px; }
+    .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #23356f; font-size: 13px; }
     .row:last-child { border-bottom: none; }
     .row .label { color: #cbd5e1; }
     .row .val { font-weight: 600; color: #fff; }
     
+    /* Istaknuti red za ukupnu zaradu */
     .row.total { background: #0f1b3d; margin: 8px -4px 0 -4px; padding: 12px 8px; border-radius: 8px; border: 1px solid #23356f; }
     .row.total .label { font-weight: 700; color: #fff; font-size: 14px; }
     .row.total .val { font-size: 16px; font-weight: 700; }
@@ -58,142 +55,169 @@
         <p>Nezavisna analiza rentabilnosti i rizika ponude</p>
     </div>
 
-    <div id="status" class="status-box status-safe">ODLIČNA PONUDA — PROFITABILNO</div>
+    <div id="status" class="status-box status-safe">PROFITABILNO JE</div>
 
     <div class="card">
-        <div class="stitle">Ključni parametri ponude</div>
-        
-        <div class="grid-inputs" style="margin-bottom: 14px;">
-            <div class="f">
-                <label>Rata klijenta (€/mj)</label>
-                <input type="number" id="rataKlijenta" value="650" oninput="proveriProfit()">
-            </div>
-            <div class="f">
-                <label>Tvoj trošak (€/mj)</label>
-                <input type="number" id="tvojTrosak" value="480" oninput="proveriProfit()">
-            </div>
-        </div>
-
-        <div class="grid-inputs" style="margin-bottom: 14px;">
-            <div class="f">
-                <label>Period (mjeseci)</label>
-                <input type="number" id="period" value="48" oninput="proveriProfit()">
-            </div>
-            <div class="f">
-                <label>Ugovorena km (god)</label>
-                <input type="number" id="kilometraza" value="20000" oninput="proveriProfit()">
-            </div>
-        </div>
+        <div class="stitle">Parametri za brzu provjeru</div>
         
         <div class="f">
-            <label>Projektovana rezidualna vrijednost (€)</label>
-            <input type="number" id="rezidual" value="9500" oninput="proveriProfit()">
+            <label>Stopa PDV-a (%):</label>
+            <input type="number" id="pdv" value="21" oninput="calc()">
+        </div>
+
+        <div class="stitle" style="margin-top: 20px;">1. Vozilo i Finansiranje</div>
+        <div class="f">
+            <label>Nabavna cena vozila (Bez PDV-a, €):</label>
+            <input type="number" id="cijena" value="20000" oninput="calc()">
+        </div>
+        <div class="f">
+            <label>Preostala (Rezidualna) vrednost na kraju (€):</label>
+            <input type="number" id="rezidual" value="11000" oninput="calc()">
+        </div>
+        <div class="f">
+            <label>Ukupan trošak kamate/kredita (Bez PDV-a, €):</label>
+            <input type="number" id="kamata" value="0" oninput="calc()">
+        </div>
+
+        <div class="stitle" style="margin-top: 20px;">2. Operativni Troškovi i Uslovi</div>
+        <div class="grid-inputs">
+            <div class="f">
+                <label>Period (Meseci):</label>
+                <select id="period" onchange="calc()">
+                    <option value="24">24 meseca</option>
+                    <option value="36">36 meseci</option>
+                    <option value="48" selected>48 meseci</option>
+                    <option value="60">60 meseci</option>
+                </select>
+            </div>
+            <div class="f">
+                <label>Ugovorena god. km:</label>
+                <input type="number" id="km" value="20000" oninput="calc()">
+            </div>
+        </div>
+        <div class="f" style="margin-top: 10px;">
+            <label>Godišnji troškovi (Kasko, servisi, gume sa PDV, €):</label>
+            <input type="number" id="troskoviGod" value="1500" oninput="calc()">
+        </div>
+
+        <div class="stitle" style="margin-top: 20px;">3. Ponuda Klijentu</div>
+        <div class="grid-inputs">
+            <div class="f">
+                <label>Rata klijenta (€):</label>
+                <input type="number" id="rataKlijenta" value="550" oninput="calc()">
+            </div>
+            <div class="f">
+                <label>Rata sadrži PDV?</label>
+                <select id="rataSadrziPdv" onchange="calc()">
+                    <option value="da" selected>Da (Sa PDV)</option>
+                    <option value="ne">Ne (Bez PDV)</option>
+                </select>
+            </div>
         </div>
     </div>
 
     <div class="card">
-        <div class="stitle">Finansijski indikatori</div>
+        <div class="stitle">Analiza Profitabilnosti</div>
         
-        <div class="grid-2">
-            <div class="metric">
-                <div class="metric-label">Čista marža / mjesec</div>
-                <div class="metric-val" id="marzaMj" style="color: #2ecc71;">0 €</div>
-            </div>
-            <div class="metric">
-                <div class="metric-label">Ukupna marža (ugovor)</div>
-                <div class="metric-val" id="marzaUk" style="color: #2ecc71;">0 €</div>
-            </div>
-        </div>
-
         <div class="row">
-            <span class="label">Ukupan prihod od zakupa:</span>
-            <span class="val" id="ukPrihod">0 €</span>
+            <span class="label">Interni mesečni trošak vozila (Bez PDV):</span>
+            <span class="val" id="intTrosak">—</span>
         </div>
         <div class="row">
-            <span class="label">Ukupni operativni troškovi:</span>
-            <span class="val" id="ukTrosak">0 €</span>
+            <span class="label">Čista mesečna rata (Bez PDV):</span>
+            <span class="val" id="cistaRata">—</span>
         </div>
         <div class="row">
-            <span class="label">Rizik kilometraže:</span>
-            <span class="val" id="rizikKm">Nizak rizik</span>
+            <span class="label">Mjesečna marža (Živ novac):</span>
+            <span class="val" id="mjesecnaMarza" style="color: #2ecc71;">—</span>
+        </div>
+        <div class="row">
+            <span class="label">Vrednost u imovini na kraju (Rezidual):</span>
+            <span class="val" id="rezidualIspis">—</span>
         </div>
         
         <div class="row total">
-            <span class="label">UKUPAN NETO PROFIT (+ auto):</span>
-            <span class="val" id="netoProfit" style="color: #2ecc71;">0 €</span>
+            <span class="label">UKUPNA NETO ZARADA (+ auto):</span>
+            <span class="val" id="ukupnaZarada" style="color: #2ecc71;">—</span>
         </div>
     </div>
 
-    <div class="footer">Alat za internu kontrolu marže: <span>RR</span></div>
+    <div class="footer">Alat izradio: <span>RR</span></div>
 </div>
 
 <script>
-function proveriProfit() {
-    let rata = parseFloat(document.getElementById('rataKlijenta').value) || 0;
-    let trosak = parseFloat(document.getElementById('tvojTrosak').value) || 0;
-    let period = parseFloat(document.getElementById('period').value) || 0;
-    let km = parseFloat(document.getElementById('kilometraza').value) || 0;
+function calc() {
+    let pdvPct = (parseFloat(document.getElementById('pdv').value) || 0) / 100;
+    let cijena = parseFloat(document.getElementById('cijena').value) || 0;
     let rezidual = parseFloat(document.getElementById('rezidual').value) || 0;
+    let kamata = parseFloat(document.getElementById('kamata').value) || 0;
+    
+    let period = parseInt(document.getElementById('period').value) || 12;
+    let km = parseFloat(document.getElementById('km').value) || 0;
+    let troskoviGod = parseFloat(document.getElementById('troskoviGod').value) || 0;
+    
+    let rataKlijenta = parseFloat(document.getElementById('rataKlijenta').value) || 0;
+    let rataSadrziPdv = document.getElementById('rataSadrziPdv').value;
 
-    // Proračuni
-    let marzaMjesecno = rata - trosak;
-    let ukupnaMarza = marzaMjesecno * period;
-    let ukPrihod = rata * period;
-    let ukTrosak = trosak * period;
-    let ukupniNetoProfit = ukupnaMarza + rezidual;
-
-    // Formatiranje u evropski stil (sa tačkom za hiljade)
-    function formatEur(br) {
-        return Math.round(br).toLocaleString('de-DE') + " €";
+    // 1. Izračun internog mesečnog troška (Bez PDV)
+    let amortizacijaMjesecno = (cijena - rezidual) / period;
+    let kamataMjesecno = kamata / period;
+    let operativniMjesecno = (troskoviGod / (1 + pdvPct)) / 12;
+    
+    // Ako kilometraža prelazi 25.000 km, uvećaj operativne troškove servisa za 20%
+    if (km > 25000) {
+        operativniMjesecno = operativniMjesecno * 1.20;
     }
-
-    // Ispis vrijednosti
-    document.getElementById('marzaMj').innerText = formatEur(marzaMjesecno);
-    document.getElementById('marzaUk').innerText = formatEur(ukupnaMarza);
-    document.getElementById('ukPrihod').innerText = formatEur(ukPrihod);
-    document.getElementById('ukTrosak').innerText = formatEur(ukTrosak);
     
-    let netoEl = document.getElementById('netoProfit');
-    netoEl.innerText = formatEur(ukupniNetoProfit);
-    netoEl.style.color = ukupniNetoProfit >= 0 ? "#2ecc71" : "#e74c3c";
+    let interniTrosakBezPdv = amortizacijaMjesecno + kamataMjesecno + operativniMjesecno;
 
-    let marzaMjEl = document.getElementById('marzaMj');
-    marzaMjEl.style.color = marzaMjesecno >= 0 ? "#2ecc71" : "#e74c3c";
-    
-    let marzaUkEl = document.getElementById('marzaUk');
-    marzaUkEl.style.color = ukupnaMarza >= 0 ? "#2ecc71" : "#e74c3c";
-
-    // Logika Semafora i Procjene rizika
-    let statusEl = document.getElementById('status');
-    let rizikKmEl = document.getElementById('rizikKm');
-
-    // 1. Procjena kilometraže
-    if (km > 30000) {
-        rizikKmEl.innerText = "VISOK RIZIK (Preko 30k km!)";
-        rizikKmEl.style.color = "#e74c3c";
-    } else if (km > 25000) {
-        rizikKmEl.innerText = "Srednji rizik (Uvećan servis)";
-        rizikKmEl.style.color = "#f39c12";
+    // 2. Izračun čiste mjesečne rate od klijenta (Bez PDV)
+    let cistaRataBezPdv = 0;
+    if (rataSadrziPdv === 'da') {
+        cistaRataBezPdv = rataKlijenta / (1 + pdvPct);
     } else {
-        rizikKmEl.innerText = "Nizak rizik (Standardno)";
-        rizikKmEl.style.color = "#2ecc71";
+        cistaRataBezPdv = rataKlijenta;
     }
 
-    // 2. Procjena ukupne profitabilnosti ponude
-    if (marzaMjesecno <= 0) {
-        statusEl.innerText = "KRITIČNO — GUBITAK NA MARŽI!";
+    // 3. Marža i Ukupna zarada
+    let mjMarza = cistaRataBezPdv - interniTrosakBezPdv;
+    let ukMarzaKrozUgovor = mjMarza * period;
+    let ukupnaNetoZarada = ukMarzaKrozUgovor + rezidual;
+
+    // Formatiranje ispisa sa tačkom za hiljade
+    function eur(br) {
+        return br.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+    }
+
+    document.getElementById('intTrosak').innerText = eur(interniTrosakBezPdv);
+    document.getElementById('cistaRata').innerText = eur(cistaRataBezPdv);
+    
+    let marzaEl = document.getElementById('mjesecnaMarza');
+    marzaEl.innerText = eur(mjMarza);
+    marzaEl.style.color = mjMarza >= 0 ? "#2ecc71" : "#e74c3c";
+    
+    document.getElementById('rezidualIspis').innerText = eur(rezidual);
+    
+    let zaradaEl = document.getElementById('ukupnaZarada');
+    zaradaEl.innerText = eur(ukupnaNetoZarada);
+    zaradaEl.style.color = ukupnaNetoZarada >= 0 ? "#2ecc71" : "#e74c3c";
+
+    // Logika Semafora
+    let statusEl = document.getElementById('status');
+    if (mjMarza <= 0) {
+        statusEl.innerText = "🔴 PONUDA JE U GUBITKU";
         statusEl.className = "status-box status-danger";
-    } else if (marzaMjesecno < 50 || km > 30000) {
-        statusEl.innerText = "RIZIČNA PONUDA (Mala marža ili velika km)";
+    } else if (mjMarza < 50) {
+        statusEl.innerText = "⚠️ PONUDA JE NISKO PROFITABILNA";
         statusEl.className = "status-box status-warning";
     } else {
-        statusEl.innerText = "ODLIČNA PONUDA — PROFITABILNO";
+        statusEl.innerText = "🟢 PONUDA JE PROFITABILNA";
         statusEl.className = "status-box status-safe";
     }
 }
 
-// Pokreni odmah na učitavanju
-window.onload = proveriProfit;
+// Pokreni račun odmah
+window.onload = calc;
 </script>
 
 </body>
