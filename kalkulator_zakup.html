@@ -12,7 +12,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 900px;
+            max-width: 500px;
             margin: 0 auto;
             background: white;
             padding: 20px;
@@ -21,13 +21,13 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-bottom: 2px solid #333;
             padding-bottom: 10px;
         }
         .header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 22px;
             color: #333;
         }
         .header .logo {
@@ -36,75 +36,64 @@
             color: #555;
             margin-top: 5px;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; }
-        }
-        .card {
-            background: #fafafa;
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
-        }
-        .card-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #444;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-        }
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .form-group label {
             font-size: 14px;
-            color: #555;
+            font-weight: bold;
+            color: #444;
             width: 60%;
         }
         .form-group input, .form-group select {
             width: 38%;
-            padding: 6px;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
             text-align: right;
+            font-size: 14px;
         }
         .note {
             font-size: 11px;
-            color: #888;
-            margin-top: -8px;
-            margin-bottom: 10px;
+            color: #777;
+            margin-top: -10px;
+            margin-bottom: 12px;
             text-align: right;
+            padding-right: 5px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+            background: #333;
+            padding: 6px 10px;
+            margin: 20px 0 15px 0;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .results-section {
-            margin-top: 30px;
-            background: #f9f9f9;
-            padding: 20px;
+            margin-top: 25px;
+            background: #fafafa;
+            padding: 15px;
             border-radius: 6px;
             border: 1px solid #ddd;
         }
         .periods-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        @media (max-width: 600px) {
-            .periods-grid { grid-template-columns: 1fr; }
+            gap: 10px;
+            margin-bottom: 20px;
         }
         .period-card {
             background: white;
             border: 1px solid #ccc;
             border-radius: 6px;
-            padding: 15px;
+            padding: 12px 5px;
             text-align: center;
             cursor: pointer;
         }
@@ -115,38 +104,36 @@
         }
         .period-title {
             font-weight: bold;
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 5px;
         }
         .period-rata {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             color: #2c3e50;
         }
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+        .detail-list {
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 6px;
             border: 1px solid #eee;
         }
-        .detail-item {
-            text-align: center;
-            padding: 10px;
-            background: #fcfcfc;
-            border-radius: 4px;
-            border: 1px solid #f0f0f0;
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #555;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 5px;
         }
-        .detail-label {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 5px;
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
         .detail-value {
-            font-size: 16px;
             font-weight: bold;
             color: #333;
         }
@@ -154,7 +141,7 @@
         .loss { color: #e74c3c !important; }
         .footer {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 25px;
             font-size: 12px;
             color: #999;
         }
@@ -164,232 +151,110 @@
 
 <div class="container">
     <div class="header">
-        <h1>Kalkulator dugoročnog zakupa vozila</h1>
+        <h1>Kalkulator dugoročnog zakupa</h1>
         <div class="logo">RR</div>
     </div>
 
-    <div class="grid">
-        <div class="card">
-            <div class="card-title">Vozilo i finansiranje</div>
-            
-            <div class="form-group">
-                <label for="stopaPdv">Stopa PDV-a (%):</label>
-                <input type="number" id="stopaPdv" value="21" oninput="izracunajSve()">
-            </div>
+    <div class="form-group">
+        <label for="stopaPdv">Stopa PDV-a (%):</label>
+        <input type="number" id="stopaPdv" value="21" oninput="izracunajSve()">
+    </div>
 
-            <div class="form-group">
-                <label for="nabavnaCena">Cijena vozila (Bez PDV, €):</label>
-                <input type="number" id="nabavnaCena" value="20000" oninput="izracunajSve()">
-            </div>
-            <div class="note">PDV se automatski dodaje na cijenu vozila</div>
+    <div class="section-title">1. Podaci o vozilu</div>
 
-            <div class="form-group">
-                <label for="preostalaVrednost">Rezidualna vrijednost (€):</label>
-                <input type="number" id="preostalaVrednost" value="11000" oninput="izracunajSve()">
-            </div>
-            <div class="note">Procijenjena tržišna vrijednost na kraju ugovora — ostaje tebi</div>
+    <div class="form-group">
+        <label for="nabavnaCena">Cijena vozila (Bez PDV, €):</label>
+        <input type="number" id="nabavnaCena" value="20000" oninput="izracunajSve()">
+    </div>
 
-            <div class="form-group">
-                <label for="trosakKamate">Ukupan trošak kamate (Bez PDV, €):</label>
-                <input type="number" id="trosakKamate" value="0" oninput="izracunajSve()">
-            </div>
-            <div class="note">Trošak kredita/lizinga ako se vozilo finansira</div>
+    <div class="form-group">
+        <label for="preostalaVrednost">Rezidualna vrijednost (€):</label>
+        <input type="number" id="preostalaVrednost" value="11000" oninput="izracunajSve()">
+    </div>
+    <div class="note">Vrijednost auta na kraju ugovora koja ostaje tebi</div>
 
-            <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+    <div class="form-group">
+        <label for="trosakKamate">Ukupan trošak kamate (€):</label>
+        <input type="number" id="trosakKamate" value="0" oninput="izracunajSve()">
+    </div>
+    <div class="note">Trošak finansiranja/kredita (ako postoji)</div>
 
-            <div class="form-group">
-                <label for="ponudjenaMarza">Željena mjesečna marža (€):</label>
-                <input type="number" id="ponudjenaMarza" value="100" oninput="izracunajSve()">
-            </div>
+    <div class="section-title">2. Uslovi i operativni troškovi</div>
 
-            <div class="form-group">
-                <label for="ucesce">Učešće klijenta (Sa PDV, €):</label>
-                <input type="number" id="ucesce" value="0" oninput="izracunajSve()">
-            </div>
-            <div class="note">Jednokratna, raspoređuje se na period zakupa</div>
-        </div>
+    <div class="form-group">
+        <label for="ugovorenaKilometraza">Ugovorena god. kilometraža (km):</label>
+        <input type="number" id="ugovorenaKilometraza" value="20000" oninput="izracunajSve()">
+    </div>
+    <div class="note">Preko 25.000 km troškovi servisa se automatski uvećavaju za 20%</div>
 
-        <div class="card">
-            <div class="card-title">Godišnji operativni troškovi <span>SA PDV</span></div>
-            
-            <div class="form-group">
-                <label for="ugovorenaKilometraza">Ugovorena god. kilometraža (km):</label>
-                <input type="number" id="ugovorenaKilometraza" value="20000" oninput="izracunajSve()">
-            </div>
-            <div class="note">Preko 25.000 km troškovi servisa se uvećavaju za 20%</div>
+    <div class="form-group">
+        <label for="registracija">Registracija i Kasko god. sa PDV (€):</label>
+        <input type="number" id="registracija" value="800" oninput="izracunajSve()">
+    </div>
 
-            <div class="form-group">
-                <label for="registracija">Registracija i Kasko sa PDV (€):</label>
-                <input type="number" id="registracija" value="800" oninput="izracunajSve()">
-            </div>
+    <div class="form-group">
+        <label for="servisi">Redovni/vanredni servisi god. sa PDV (€):</label>
+        <input type="number" id="servisi" value="400" oninput="izracunajSve()">
+    </div>
 
-            <div class="form-group">
-                <label for="servisi">Redovni i vanredni servisi sa PDV (€):</label>
-                <input type="number" id="servisi" value="400" oninput="izracunajSve()">
-            </div>
+    <div class="form-group">
+        <label for="gume">Trošak guma godišnje sa PDV (€):</label>
+        <input type="number" id="gume" value="200" oninput="izracunajSve()">
+    </div>
 
-            <div class="form-group">
-                <label for="gume">Trošak guma sa PDV (€):</label>
-                <input type="number" id="gume" value="200" oninput="izracunajSve()">
-            </div>
-            <div class="note">Procijenjeni godišnji trošak guma</div>
+    <div class="form-group">
+        <label for="ostalo">Ostali godišnji troškovi sa PDV (€):</label>
+        <input type="number" id="ostalo" value="100" oninput="izracunajSve()">
+    </div>
 
-            <div class="form-group">
-                <label for="ostalo">Ostali troškovi sa PDV (€):</label>
-                <input type="number" id="ostalo" value="100" oninput="izracunajSve()">
-            </div>
-            <div class="note">Tehnički pregled, pranje, asistencija, admin...</div>
-        </div>
+    <div class="section-title">3. Marža i učešće</div>
+
+    <div class="form-group">
+        <label for="ponudjenaMarza">Željena mjesečna marža (€):</label>
+        <input type="number" id="ponudjenaMarza" value="100" oninput="izracunajSve()">
+    </div>
+
+    <div class="form-group">
+        <label for="ucesce">Učešće klijenta (Sa PDV, €):</label>
+        <input type="number" id="ucesce" value="0" oninput="izracunajSve()">
     </div>
 
     <div class="results-section">
-        <div style="font-weight: bold; margin-bottom: 15px; color: #333; font-size: 16px;">Rata za klijenta po periodu zakupa (SA PDV)</div>
+        <div style="font-weight: bold; margin-bottom: 12px; color: #333; font-size: 14px; text-align: center;">MJE SEČNA RATA ZA KLIJENTA (SA PDV)</div>
         
         <div class="periods-grid">
             <div class="period-card" id="card36" onclick="promijeniPeriod(36)">
-                <div class="period-title">3 godine / 36 mj</div>
+                <div class="period-title">3 god / 36 mj</div>
                 <div class="period-rata" id="rata36">—</div>
             </div>
             <div class="period-card" id="card48" onclick="promijeniPeriod(48)">
-                <div class="period-title">4 godine / 48 mj</div>
+                <div class="period-title">4 god / 48 mj</div>
                 <div class="period-rata" id="rata48">—</div>
             </div>
             <div class="period-card" id="card60" onclick="promijeniPeriod(60)">
-                <div class="period-title">5 godina / 60 mj</div>
+                <div class="period-title">5 god / 60 mj</div>
                 <div class="period-rata" id="rata60">—</div>
             </div>
         </div>
 
-        <div style="font-weight: bold; margin-bottom: 15px; color: #333; font-size: 16px;" id="detaljanPrikazNaslov">Detaljan prikaz — odabrani period</div>
+        <div style="font-weight: bold; margin-bottom: 10px; color: #444; font-size: 13px; text-align: center;" id="detaljanPrikazNaslov">Detaljan prikaz</div>
         
-        <div class="detail-grid">
-            <div class="detail-item">
-                <div class="detail-label">Tvoj trošak / mj (Bez PDV)</div>
-                <div class="detail-value" id="detaljanTrosak">—</div>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Interni mjesečni trošak (Bez PDV):</span>
+                <span class="detail-value" id="detaljanTrosak">—</span>
             </div>
-            <div class="detail-item">
-                <div class="detail-label">Rata klijenta / mj (Sa PDV)</div>
-                <div class="detail-value" id="detaljanRataKlijenta">—</div>
+            <div class="detail-row">
+                <span>Rata klijenta (Sa PDV):</span>
+                <span class="detail-value" id="detaljanRataKlijenta" style="color: #2c3e50;">—</span>
             </div>
-            <div class="detail-item">
-                <div class="detail-label">Zarada iz marže / mj (Bez PDV)</div>
-                <div class="detail-value profit" id="detaljanMarzaMjesecno">—</div>
+            <div class="detail-row">
+                <span>Mjesečna marža (Bez PDV):</span>
+                <span class="detail-value profit" id="detaljanMarzaMjesecno">—</span>
             </div>
-            <div class="detail-item">
-                <div class="detail-label">Ukupna zarada (marža)</div>
-                <div class="detail-value profit" id="detaljanMarzaUkupno">—</div>
+            <div class="detail-row">
+                <span>Ukupna naplaćena marža:</span>
+                <span class="detail-value profit" id="detaljanMarzaUkupno">—</span>
             </div>
-            <div class="detail-item">
-                <div class="detail-label">Rezidualna vrijednost (tvoja)</div>
-                <div class="detail-value" id="detaljanRezidual">—</div>
-            </div>
-            <div class="detail-item" style="background: #eef9f3; border: 1px solid #2ecc71;">
-                <div class="detail-label" style="font-weight: bold; color: #27ae60;">NETO ZARADA UKUPNO</div>
-                <div class="detail-value profit" id="detaljanNetoUkupno" style="font-size: 18px;">—</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer">Kalkulator izradio: <span>RR</span></div>
-</div>
-
-<script>
-let trenutniPeriod = 36;
-let proracuni = {};
-
-function izracunajSve() {
-    let pdvProcenat = (parseFloat(document.getElementById('stopaPdv').value) || 0) / 100;
-    let nabavnaCena = parseFloat(document.getElementById('nabavnaCena').value) || 0;
-    let preostalaVrednost = parseFloat(document.getElementById('preostalaVrednost').value) || 0;
-    let kamata = parseFloat(document.getElementById('trosakKamate').value) || 0;
-    let zeljenaMarza = parseFloat(document.getElementById('ponudjenaMarza').value) || 0;
-    let ucesceSaPdv = parseFloat(document.getElementById('ucesce').value) || 0;
-    
-    let kmGodisnje = parseFloat(document.getElementById('ugovorenaKilometraza').value) || 20000;
-    let registracija = parseFloat(document.getElementById('registracija').value) || 0;
-    let servisi = parseFloat(document.getElementById('servisi').value) || 0;
-    let gume = parseFloat(document.getElementById('gume').value) || 0;
-    let ostalo = parseFloat(document.getElementById('ostalo').value) || 0;
-
-    // Ako je kilometraža veća od 25.000 km, servisi se uvećavaju za 20%
-    if (kmGodisnje > 25000) {
-        servisi = servisi * 1.20;
-    }
-
-    let ukupniGodisnjiOperativniSaPdv = registracija + servisi + gume + ostalo;
-    let ukupniGodisnjiOperativniBezPdv = ukupniGodisnjiOperativniSaPdv / (1 + pdvProcenat);
-    let ucesceBezPdv = ucesceSaPdv / (1 + pdvProcenat);
-
-    let periodi = [36, 48, 60];
-
-    periodi.forEach(function(p) {
-        let padVrijednostiAuta = nabavnaCena - preostalaVrednost;
-        let operativniZaPeriod = ukupniGodisnjiOperativniBezPdv * (p / 12);
-        
-        let ukupanTrosakBezPdv = padVrijednostiAuta + operativniZaPeriod + kamata;
-        let mjesecniTrosakBezPdv = ukupanTrosakBezPdv / p;
-        
-        // Mjesečna rata bez PDV (Trošak + željena marža, minus raspoređeno učešće)
-        let rataBezPdv = mjesecniTrosakBezPdv + zeljenaMarza - (ucesceBezPdv / p);
-        let rataSaPdv = rataBezPdv * (1 + pdvProcenat);
-
-        let ukupnaMarzaZaPeriod = zeljenaMarza * p;
-        let ukupnaNetoZarada = ukupnaMarzaZaPeriod + preostalaVrednost;
-
-        proracuni[p] = {
-            trosakMjecno: mjesecniTrosakBezPdv,
-            rataKlijenta: rataSaPdv,
-            marzaMjesecno: zeljenaMarza,
-            marzaUkupno: ukupnaMarzaZaPeriod,
-            rezidual: preostalaVrednost,
-            netoUkupno: ukupnaNetoZarada
-        };
-
-        document.getElementById('rata' + p).innerText = rataSaPdv.toFixed(2) + " €";
-    });
-
-    azurirajDetaljanPrikaz();
-}
-
-function promijeniPeriod(p) {
-    trenutniPeriod = p;
-    document.querySelectorAll('.period-card').forEach(c => c.classList.remove('active'));
-    document.getElementById('card' + p).classList.add('active');
-    azurirajDetaljanPrikaz();
-}
-
-function azurirajDetaljanPrikaz() {
-    let p = trenutniPeriod;
-    let podaci = proracuni[p];
-    
-    if (!podaci) return;
-
-    let godine = p / 12;
-    document.getElementById('detaljanPrikazNaslov').innerText = "Detaljan prikaz — odabrani period: " + godine + " god / " + p + " mj";
-    
-    document.getElementById('detaljanTrosak').innerText = podaci.trosakMjecno.toFixed(2) + " €";
-    document.getElementById('detaljanRataKlijenta').innerText = podaci.rataKlijenta.toFixed(2) + " €";
-    
-    let marzaMjEl = document.getElementById('detaljanMarzaMjesecno');
-    marzaMjEl.innerText = podaci.marzaMjesecno.toFixed(2) + " €";
-    marzaMjEl.className = podaci.marzaMjesecno >= 0 ? "detail-value profit" : "detail-value loss";
-
-    let marzaUkEl = document.getElementById('detaljanMarzaUkupno');
-    marzaUkEl.innerText = podaci.marzaUkupno.toFixed(2) + " €";
-    marzaUkEl.className = podaci.marzaUkupno >= 0 ? "detail-value profit" : "detail-value loss";
-
-    document.getElementById('detaljanRezidual').innerText = podaci.rezidual.toFixed(2) + " €";
-    
-    let netoUkEl = document.getElementById('detaljanNetoUkupno');
-    netoUkEl.innerText = podaci.netoUkupno.toFixed(2) + " €";
-    netoUkEl.className = podaci.netoUkupno >= 0 ? "detail-value profit" : "detail-value loss";
-}
-
-window.onload = function() {
-    izracunajSve();
-    promijeniPeriod(36);
-};
-</script>
-
-</body>
-</html>
+            <div class="detail-row">
+                <span>Rezidualna
