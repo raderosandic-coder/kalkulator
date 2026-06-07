@@ -1,292 +1,266 @@
 <!DOCTYPE html>
-<html lang="bs">
+<html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1A2A6C">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="RR Zakup">
-<link rel="apple-touch-icon" href="icon.svg">
-<title>RR — Kalkulator dugoročnog zakupa</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#0f1b3d;font-size:14px;padding:12px;}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.header h1{font-size:20px;font-weight:600;color:#0f1b3d;}
-.rr-badge{width:40px;height:40px;border-radius:50%;background:#1A2A6C;color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;letter-spacing:1px;}
-.pdv-note{font-size:11px;color:#fff;background:#1A2A6C;border-radius:6px;padding:3px 8px;margin-left:6px;font-weight:500;}
-.pdv-note.gray{background:#8792ad;}
-.g2{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px;}
-.card{background:#fff;border:1px solid #e2e6f0;border-radius:10px;padding:16px 18px;}
-.stitle{font-size:11px;font-weight:600;color:#8792ad;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
-.f{margin-bottom:10px;}
-.f label{display:flex;align-items:center;font-size:13px;color:#4a5578;margin-bottom:3px;gap:6px;}
-.f input{width:100%;padding:10px 12px;border:1px solid #c8d0e4;border-radius:6px;font-size:16px;font-family:inherit;outline:none;}
-.f input:focus{border-color:#2d5be3;}
-.f .hint{font-size:11px;color:#8792ad;margin-top:2px;}
-hr{border:none;border-top:1px solid #e2e6f0;margin:12px 0;}
-.periods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;}
-.pc{background:#fff;border:1px solid #e2e6f0;border-radius:10px;padding:14px;text-align:center;cursor:pointer;}
-.pc:hover{border-color:#2d5be3;}
-.pc.sel{border:2px solid #2d5be3;background:#f0f4ff;}
-.pc-label{font-size:12px;color:#8792ad;margin-bottom:6px;}
-.pc-val{font-size:20px;font-weight:600;color:#0f1b3d;}
-.pc-sub{font-size:12px;color:#8792ad;margin-top:4px;}
-.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
-.mc{background:#f4f6fb;border-radius:8px;padding:12px;}
-.mc-l{font-size:12px;color:#8792ad;margin-bottom:4px;}
-.mc-v{font-size:18px;font-weight:600;color:#0f1b3d;}
-.mc-v.blue{color:#1A2A6C;}
-.mc-v.green{color:#1a7a3c;}
-.brow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e2e6f0;font-size:13px;}
-.brow:last-child{border-bottom:none;}
-.brow .bn{color:#4a5578;}
-.brow .bv{color:#0f1b3d;}
-.brow.sum{background:#f4f6fb;margin:4px -4px;padding:7px 4px;border-radius:6px;border:none;}
-.brow.sum .bn,.brow.sum .bv{font-weight:600;font-size:14px;}
-.brow.green .bv{color:#1a7a3c;font-weight:600;}
-.brow.blue .bv{color:#1A2A6C;font-weight:600;}
-.brow.total{background:#1A2A6C;margin:4px -4px;padding:9px 4px;border-radius:8px;border:none;}
-.brow.total .bn,.brow.total .bv{font-weight:700;font-size:15px;color:#fff;}
-.nota{font-size:12px;color:#4a5578;margin-top:10px;padding:8px 12px;background:#e8edf8;border-radius:6px;border-left:3px solid #1A2A6C;}
-.footer{text-align:right;margin-top:16px;font-size:12px;color:#8792ad;}
-.footer span{font-weight:700;color:#1A2A6C;}
-@media(max-width:480px){.periods{grid-template-columns:1fr;}.metrics{grid-template-columns:1fr;}.pc-val{font-size:16px;}.mc-v{font-size:16px;}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RR — Kalkulator dugoročnog zakupa</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #18bc9c;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        h2, h3, h4 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        .section-title {
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        input:focus, select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--light-bg);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .toggle-container label {
+            margin-bottom: 0;
+        }
+        .toggle-container input {
+            width: auto;
+        }
+        .results-box {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border-left: 5px solid var(--secondary-color);
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .result-row.total {
+            font-size: 18px;
+            font-weight: bold;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+        .badge-profit {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        .badge-loss {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>Kalkulator dugoročnog zakupa vozila</h1>
-  <div class="rr-badge">RR</div>
+<div class="container">
+    <h2>RR — Kalkulator Zakupa Vozila</h2>
+    <p style="text-align:center; color: #7f8c8d; font-size:13px; margin-top:-10px;">Profesionalni alat za izradu ponuda</p>
+
+    <div class="form-group">
+        <label for="stopaPdv">Stopa PDV-a (%):</label>
+        <input type="number" id="stopaPdv" value="21" oninput="izracunajSve()">
+    </div>
+
+    <div class="section-title">Vozilo i Finansiranje</div>
+    
+    <div class="form-group">
+        <label for="nabavnaCena">Nabavna cena vozila (Bez PDV-a, €):</label>
+        <input type="number" id="nabavnaCena" value="20000" oninput="izracunajSve()">
+    </div>
+
+    <div class="form-group">
+        <label for="preostalaVrednost">Preostala (Rezidualna) vrednost na kraju (€):</label>
+        <input type="number" id="preostalaVrednost" value="11000" oninput="izracunajSve()">
+    </div>
+
+    <div class="form-group">
+        <label for="trošakKamate">Ukupan trošak kamate/kredita (Bez PDV-a, €):</label>
+        <input type="number" id="trošakKamate" value="0" oninput="izracunajSve()">
+    </div>
+
+    <div class="section-title">Operativni Troškovi i Uslovi</div>
+
+    <div class="form-group">
+        <label for="period">Period zakupa (Meseci):</label>
+        <select id="period" onchange="izracunajSve()">
+            <option value="24">24 meseca (2 godine)</option>
+            <option value="36" selected>36 meseci (3 godine)</option>
+            <option value="48">48 meseci (4 godine)</option>
+            <option value="60">60 meseci (5 godina)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ugovorenaKilometraza">Ugovorena godišnja kilometraža (km):</label>
+        <input type="number" id="ugovorenaKilometraza" value="20000" oninput="izracunajSve()">
+    </div>
+
+    <div class="form-group">
+        <label for="operativniTroskovi">Godišnji troškovi (Kasko, obavezno, gume, servisi sa PDV-om, €):</label>
+        <input type="number" id="operativniTroskovi" value="1500" oninput="izracunajSve()">
+    </div>
+
+    <div class="section-title">Ponuda Klijentu</div>
+
+    <div class="form-group">
+        <label for="ponudjenaRata">Predložena mesečna rata klijentu (€):</label>
+        <input type="number" id="ponudjenaRata" value="550" oninput="izracunajSve()">
+    </div>
+
+    <div class="toggle-container">
+        <label for="rataSaPdv">Ponuđena rata sadrži PDV?</label>
+        <input type="checkbox" id="rataSaPdv" checked onchange="izracunajSve()">
+    </div>
+
+    <div class="results-box">
+        <h3>Analiza Profitabilnosti</h3>
+        
+        <div class="result-row">
+            <span>Interni mesečni trošak vozila (Bez PDV):</span>
+            <span id="mjesecniTrosak" style="font-weight: 600;">0.00 €</span>
+        </div>
+        
+        <div class="result-row">
+            <span>Čista mesečna rata (Bez PDV):</span>
+            <span id="cistaRata" style="font-weight: 600;">0.00 €</span>
+        </div>
+        
+        <hr style="border: 0; border-top: 1px solid #ddd;">
+
+        <div class="result-row">
+            <span>Mjesečna marža (Živ novac):</span>
+            <span id="mjesecniProfit">0.00 €</span>
+        </div>
+
+        <div class="result-row">
+            <span>Vrednost u imovini na kraju (Rezidual):</span>
+            <span id="rezidualniProfit" style="color: #34495e;">0.00 €</span>
+        </div>
+
+        <div class="result-row total">
+            <span>Ukupna NETO Zarada:</span>
+            <span id="ukupnaZarada">0.00 €</span>
+        </div>
+        
+        <div class="result-row" style="justify-content: center; margin-top: 10px;">
+            <span id="statusBadge" style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;"></span>
+        </div>
+    </div>
 </div>
-
-<div class="g2">
-  <div class="card">
-    <div class="stitle">Vozilo i finansiranje</div>
-    <div class="f">
-      <label>Nabavna cijena vozila <span class="pdv-note gray">BEZ PDV</span></label>
-      <input type="number" id="cijena" value="25000" step="100" oninput="calc()">
-    </div>
-    <div class="f">
-      <label>PDV na vozilo (%)</label>
-      <input type="number" id="pdv" value="21" oninput="calc()">
-      <div class="hint">PDV se automatski dodaje na cijenu vozila</div>
-    </div>
-    <div class="f">
-      <label>Rezidualna vrijednost (%)</label>
-      <input type="number" id="rez" value="30" oninput="calc()">
-      <div class="hint">Procijenjena tržišna vrijednost na kraju ugovora — ostaje tebi</div>
-    </div>
-    <hr>
-    <div class="f">
-      <label>Učešće / kapara (%) <span class="pdv-note gray">tvoje</span></label>
-      <input type="number" id="uces" value="20" oninput="calc()">
-    </div>
-    <div class="f">
-      <label>Kamatna stopa lizinga (% godišnje)</label>
-      <input type="number" id="kamata" value="6.5" step="0.1" oninput="calc()">
-    </div>
-    <div class="f">
-      <label>Naknada za obradu lizinga (%)</label>
-      <input type="number" id="naknada" value="1" step="0.1" oninput="calc()">
-      <div class="hint">Jednokratna, raspoređuje se na period zakupa</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="stitle">Godišnji operativni troškovi <span class="pdv-note">SA PDV</span></div>
-    <div class="f">
-      <label>Registracija vozila (€/god) <span class="pdv-note">SA PDV</span></label>
-      <input type="number" id="reg" value="300" oninput="calc()">
-    </div>
-    <div class="f">
-      <label>Kasko osiguranje (€/god) <span class="pdv-note">SA PDV</span></label>
-      <input type="number" id="kasko" value="800" oninput="calc()">
-    </div>
-    <div class="f">
-      <label>Gume — amortizacija (€/god) <span class="pdv-note">SA PDV</span></label>
-      <input type="number" id="gume" value="400" oninput="calc()">
-      <div class="hint">Procijenjeni godišnji trošak guma</div>
-    </div>
-    <div class="f">
-      <label>Redovni servis (€/god) <span class="pdv-note">SA PDV</span></label>
-      <input type="number" id="servis" value="400" oninput="calc()">
-    </div>
-    <div class="f">
-      <label>Vanredni servis / rezerva (€/god) <span class="pdv-note">SA PDV</span></label>
-      <input type="number" id="vanr" value="200" oninput="calc()">
-    </div>
-    <div class="f">
-      <label>Ostalo (€/god) <span class="pdv-note">SA PDV</span></label>
-      <input type="number" id="ostalo" value="300" oninput="calc()">
-      <div class="hint">Tehnički pregled, pranje, asistencija, admin...</div>
-    </div>
-    <hr>
-    <div class="f">
-      <label>Vaša marža na mjesečnu ratu (%)</label>
-      <input type="number" id="marza" value="15" oninput="calc()">
-    </div>
-    <div class="f" style="background:#f4f6fb;border-radius:8px;padding:10px;">
-      <label style="flex-direction:row;align-items:center;gap:8px;cursor:pointer;">
-        <input type="checkbox" id="pdv_rata" onchange="calc()" style="width:auto;margin:0"> 
-        Dodaj PDV na ratu klijentu
-      </label>
-      <div id="pdv_rata_wrap" style="display:none;margin-top:8px">
-        <label>PDV na ratu (%)</label>
-        <input type="number" id="pdv_rata_pct" value="21" oninput="calc()">
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="stitle">Rata za klijenta po periodu zakupa</div>
-  <div class="periods">
-    <div class="pc sel" id="pc3" onclick="selP(3)">
-      <div class="pc-label">3 godine / 36 mj</div>
-      <div class="pc-val" id="r3">—</div>
-      <div class="pc-sub" id="r3s">—</div>
-    </div>
-    <div class="pc" id="pc4" onclick="selP(4)">
-      <div class="pc-label">4 godine / 48 mj</div>
-      <div class="pc-val" id="r4">—</div>
-      <div class="pc-sub" id="r4s">—</div>
-    </div>
-    <div class="pc" id="pc5" onclick="selP(5)">
-      <div class="pc-label">5 godina / 60 mj</div>
-      <div class="pc-val" id="r5">—</div>
-      <div class="pc-sub" id="r5s">—</div>
-    </div>
-  </div>
-
-  <div class="metrics">
-    <div class="mc"><div class="mc-l">Tvoj trošak / mj</div><div class="mc-v" id="m-cost">—</div></div>
-    <div class="mc"><div class="mc-l">Rata klijenta / mj</div><div class="mc-v blue" id="m-rata">—</div></div>
-    <div class="mc"><div class="mc-l">Zarada iz marže / mj</div><div class="mc-v" id="m-zarmj">—</div></div>
-    <div class="mc"><div class="mc-l">Ukupna zarada (marža)</div><div class="mc-v" id="m-zar">—</div></div>
-    <div class="mc"><div class="mc-l">Rezidualna vrijednost (tvoja)</div><div class="mc-v green" id="m-rez">—</div></div>
-    <div class="mc"><div class="mc-l">NETO ZARADA UKUPNO</div><div class="mc-v green" id="m-neto">—</div></div>
-  </div>
-
-  <div class="stitle" style="margin-top:4px">Detaljan prikaz — odabrani period</div>
-  <div id="bd"></div>
-  <div class="nota" id="nota"></div>
-</div>
-
-<div class="footer">Kalkulator izradio: <span>RR</span></div>
 
 <script>
-var sel=3;
-function selP(g){
-  sel=g;
-  [3,4,5].forEach(function(x){
-    document.getElementById('pc'+x).classList.toggle('sel',x===g);
-  });
-  calc();
+function izracunajSve() {
+    let pdvProcenat = (parseFloat(document.getElementById('stopaPdv').value) || 0) / 100;
+    let nabavnaCena = parseFloat(document.getElementById('nabavnaCena').value) || 0;
+    let preostalaVrednost = parseFloat(document.getElementById('preostalaVrednost').value) || 0;
+    let kamata = parseFloat(document.getElementById('trošakKamate').value) || 0;
+    
+    let period = parseFloat(document.getElementById('period').value) || 36;
+    let kmGodisnje = parseFloat(document.getElementById('ugovorenaKilometraza').value) || 20000;
+    let godisnjiTroskoviSaPdv = parseFloat(document.getElementById('operativniTroskovi').value) || 0;
+    
+    let ponudjenaRata = parseFloat(document.getElementById('ponudjenaRata').value) || 0;
+    let rataSaPdv = document.getElementById('rataSaPdv').checked;
+
+    if (kmGodisnje > 25000) {
+        godisnjiTroskoviSaPdv = godisnjiTroskoviSaPdv * 1.20;
+    }
+
+    let godisnjiTroskoviBezPdv = godisnjiTroskoviSaPdv / (1 + pdvProcenat);
+    let ukupniOperativniTroskoviZaPeriod = godisnjiTroskoviBezPdv * (period / 12);
+
+    let padVrednostiAuta = nabavnaCena - preostalaVrednost;
+    let ukupanTrosakVozilaZaPeriod = padVrednostiAuta + ukupniOperativniTroskoviZaPeriod + kamata;
+    let mjesecniTrosakBezPdv = ukupanTrosakVozilaZaPeriod / period;
+
+    let ponudjenaRataBezPdv = rataSaPdv ? (ponudjenaRata / (1 + pdvProcenat)) : ponudjenaRata;
+
+    let mjesecnaMarza = ponudjenaRataBezPdv - mjesecniTrosakBezPdv;
+    let ukupanProfitIzMarze = mjesecnaMarza * period;
+    let ukupnaNetoZarada = ukupanProfitIzMarze + preostalaVrednost;
+
+    document.getElementById('mjesecniTrosak').innerText = mjesecniTrosakBezPdv.toFixed(2) + " €";
+    document.getElementById('cistaRata').innerText = ponudjenaRataBezPdv.toFixed(2) + " €";
+    
+    let mjesecniProfitEl = document.getElementById('mjesecniProfit');
+    mjesecniProfitEl.innerText = mjesecnaMarza.toFixed(2) + " €";
+    
+    if (mjesecnaMarza >= 0) {
+        mjesecniProfitEl.className = "badge-profit";
+        document.getElementById('statusBadge').innerHTML = "🟢 PONUDA JE PROFITABILNA";
+        document.getElementById('statusBadge').className = "badge-profit";
+    } else {
+        mjesecniProfitEl.className = "badge-loss";
+        document.getElementById('statusBadge').innerHTML = "🔴 GUBITAK NA MJESEČNOM NIVOU";
+        document.getElementById('statusBadge').className = "badge-loss";
+    }
+
+    document.getElementById('rezidualniProfit').innerText = preostalaVrednost.toFixed(2) + " €";
+    
+    let ukupnaZaradaEl = document.getElementById('ukupnaZarada');
+    ukupnaZaradaEl.innerText = ukupnaNetoZarada.toFixed(2) + " €";
+    ukupnaZaradaEl.style.color = ukupnaNetoZarada >= 0 ? "var(--secondary-color)" : "var(--danger-color)";
 }
-function v(id){return parseFloat(document.getElementById(id).value)||0;}
-function eur(n){return '€'+Math.round(n).toLocaleString('de-DE');}
 
-function togglePDVRata(){
-  var show = document.getElementById('pdv_rata').checked;
-  document.getElementById('pdv_rata_wrap').style.display = show ? 'block' : 'none';
-}
-document.getElementById('pdv_rata').addEventListener('change', togglePDVRata);
-
-function calcPeriod(god){
-  var n=god*12;
-  // Cijena vozila sa PDV
-  var csPDV=v('cijena')*(1+v('pdv')/100);
-  var ucesceEur=csPDV*v('uces')/100;
-  var rezEur=csPDV*v('rez')/100;
-  // Finansira se lizingom: cijena - učešće - rezidualna
-  var finIznos=csPDV-ucesceEur-rezEur;
-  var rm=v('kamata')/100/12;
-  var rata=finIznos<=0?0:(rm>0?finIznos*rm*Math.pow(1+rm,n)/(Math.pow(1+rm,n)-1):finIznos/n);
-  // Naknada za obradu raspoređena po mjesecu
-  var naknadaMjes=csPDV*v('naknada')/100/n;
-  // Svi operativni troškovi (već sa PDV) po mjesecu
-  var godOst=v('reg')+v('kasko')+v('gume')+v('servis')+v('vanr')+v('ostalo');
-  var mesOst=godOst/12;
-  // Ukupni tvoj trošak po mjesecu
-  var mesTros=rata+naknadaMjes+mesOst;
-  var marzaPct=v('marza')/100;
-  // Rata klijenta
-  var mesRataBezPDV=mesTros/(1-marzaPct);
-  var mesZar=mesRataBezPDV-mesTros;
-  var pdvRata=document.getElementById('pdv_rata').checked;
-  var pdvRataPct=pdvRata?(parseFloat(document.getElementById('pdv_rata_pct').value)||21)/100:0;
-  var mesRata=mesRataBezPDV*(1+pdvRataPct);
-  var ukupnoKlijent=mesRata*n;
-  var ukupnoTrosak=mesTros*n;
-  var ukupnoZarMarza=mesZar*n;
-  // Neto zarada = marža + rezidualna (vozilo ostaje tebi)
-  var netoZarada=ukupnoZarMarza+rezEur;
-  var roi=ucesceEur>0?(netoZarada/ucesceEur*100):0;
-  return{rata,naknadaMjes,mesOst,mesTros,mesRata,mesRataBezPDV,mesZar,pdvRata,pdvRataPct,
-    ukupnoKlijent,ukupnoTrosak,ukupnoZarMarza,netoZarada,
-    csPDV,ucesceEur,rezEur,finIznos,n,god,roi};
-}
-
-function calc(){
-  [3,4,5].forEach(function(g){
-    var p=calcPeriod(g);
-    document.getElementById('r'+g).textContent=eur(p.mesRata)+'/mj'+(p.pdvRata?' (sa PDV)':' (bez PDV)');
-    document.getElementById('r'+g+'s').textContent=eur(p.ukupnoKlijent)+' ukupno';
-  });
-  var p=calcPeriod(sel);
-  document.getElementById('m-cost').textContent=eur(p.mesTros)+'/mj';
-  document.getElementById('m-rata').textContent=eur(p.mesRata)+'/mj';
-  document.getElementById('m-zarmj').textContent=eur(p.mesZar)+'/mj';
-  document.getElementById('m-zar').textContent=eur(p.ukupnoZarMarza);
-  document.getElementById('m-rez').textContent=eur(p.rezEur);
-  document.getElementById('m-neto').textContent=eur(p.netoZarada);
-
-  var rows=[
-    ['Cijena vozila bez PDV', eur(v('cijena')), ''],
-    ['PDV ('+Math.round(v('pdv'))+'%)', eur(v('cijena')*v('pdv')/100), ''],
-    ['Cijena vozila sa PDV', eur(p.csPDV), 'sum'],
-    ['', '', 'hr'],
-    ['Učešće / kapara ('+Math.round(v('uces'))+'%)', eur(p.ucesceEur), ''],
-    ['Rezidualna vrijednost ('+Math.round(v('rez'))+'%)', eur(p.rezEur), ''],
-    ['Iznos koji se finansira lizingom', eur(p.finIznos), 'sum'],
-    ['', '', 'hr'],
-    ['Lizing rata / mj', eur(p.rata), ''],
-    ['Naknada za obradu / mj', eur(p.naknadaMjes), ''],
-    ['Operativni troškovi / mj', eur(p.mesOst), ''],
-    ['Tvoj ukupni trošak / mj', eur(p.mesTros), 'sum'],
-    ['Rata klijenta / mj BEZ PDV', eur(p.mesRataBezPDV), 'blue'],
-    p.pdvRata?['PDV na ratu ('+Math.round(p.pdvRataPct*100)+'%)', eur(p.mesRata-p.mesRataBezPDV), '']:null,
-    p.pdvRata?['Rata klijenta / mj SA PDV', eur(p.mesRata), 'sum']:null,
-    ['', '', 'hr'],
-    ['Prihod od klijenta ukupno ('+p.n+' mj)', eur(p.ukupnoKlijent), ''],
-    ['Tvoji troškovi ukupno', eur(p.ukupnoTrosak), ''],
-    ['Zarada iz marže ukupno', eur(p.ukupnoZarMarza), 'green'],
-    ['+ Rezidualna vrijednost vozila', eur(p.rezEur), 'green'],
-    ['NETO ZARADA', eur(p.netoZarada), 'total'],
-  ];
-
-  var rows2=rows.filter(function(r){return r!==null;});
-  document.getElementById('bd').innerHTML=rows2.map(function(r){
-    if(r[2]==='hr')return '<hr style="border:none;border-top:1px solid #e2e6f0;margin:5px 0">';
-    return '<div class="brow '+r[2]+'"><span class="bn">'+r[0]+'</span><span class="bv">'+r[1]+'</span></div>';
-  }).join('');
-
-  document.getElementById('nota').innerHTML=
-    'Period: <b>'+p.god+' god</b> &nbsp;·&nbsp; '+
-    'Učešće: <b>'+eur(p.ucesceEur)+'</b> &nbsp;·&nbsp; '+
-    'Rezidualna: <b>'+eur(p.rezEur)+'</b> &nbsp;·&nbsp; '+
-    'Povrat na uloženo (ROI): <b>'+Math.round(p.roi)+'%</b>';
-}
-calc();
+window.onload = izracunajSve;
 </script>
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(function(){});
-}
-</script>
+
 </body>
 </html>
