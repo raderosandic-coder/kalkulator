@@ -120,7 +120,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
       <select id="fv" onchange="renderV()">
         <option value="">Sva vozila</option>
         <option value="lizing">Lizing</option>
-        <option value="vlasnistvo">Vlasništvo</option>
+        <option value="vlasnistvo">U vlasništvu</option>
         <option value="alert">Sa upozorenjima</option>
       </select>
     </div>
@@ -154,11 +154,11 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
       <div class="tab" onclick="setRepTab('flota',this)">Cijela flota</div>
     </div>
     <div id="rep_vozilo">
-      <div class="f"><label>Odaberi vozilo</label><select id="rep_v" onchange="renderRepV()"><option value="">— Odaberi —</option></select></div>
+      <div class="f"><label>Izaberi vozilo</label><select id="rep_v" onchange="renderRepV()"><option value="">— Izaberi —</option></select></div>
       <div id="rep_v_content"></div>
     </div>
     <div id="rep_klijent" style="display:none">
-      <div class="f"><label>Odaberi klijenta</label><select id="rep_k" onchange="renderRepK()"><option value="">— Odaberi —</option></select></div>
+      <div class="f"><label>Izaberi klijenta</label><select id="rep_k" onchange="renderRepK()"><option value="">— Izaberi —</option></select></div>
       <div id="rep_k_content"></div>
     </div>
     <div id="rep_flota" style="display:none">
@@ -212,7 +212,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <div class="tab active" onclick="setVTab('osnovno',this)">Osnovno</div>
     <div class="tab" onclick="setVTab('finansije',this)">Finansije</div>
     <div class="tab" onclick="setVTab('datumi',this)">Datumi</div>
-    <div class="tab" onclick="setVTab('historija',this)">Historija</div>
+    <div class="tab" onclick="setVTab('istorija',this)">Istorija</div>
   </div>
   <!-- OSNOVNO -->
   <div id="vtab_osnovno">
@@ -220,7 +220,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
       <div class="f"><label>Registracija</label><input id="v_reg" placeholder="PG XX 000"></div>
       <div class="f"><label>Model</label><input id="v_model" placeholder="VW Golf..."></div>
       <div class="f"><label>Godište</label><input type="number" id="v_god" value="2022"></div>
-      <div class="f"><label>Vlasništvo</label><select id="v_tip" onchange="toggleLizing()"><option value="lizing">Lizing</option><option value="vlasnistvo">Vlastito</option></select></div>
+      <div class="f"><label>Vlasništvo</label><select id="v_tip" onchange="toggleLizing()"><option value="lizing">Lizing</option><option value="vlasnistvo">U vlasništvu</option></select></div>
     </div>
     <div class="f"><label>Klijent</label>
       <select id="v_klijent_id"><option value="">— Bez klijenta —</option></select>
@@ -230,7 +230,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
         <option value="">— Nije uneseno —</option>
         <option value="ljetnje">☀️ Ljetnje</option>
         <option value="zimske">❄️ Zimske</option>
-        <option value="cjelogodisnje">🔄 Cjelogodišnje</option>
+        <option value="svesezonce">🔄 Svesezonce</option>
       </select>
     </div>
     <div class="row2">
@@ -270,8 +270,8 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     </div>
   </div>
   <!-- HISTORIJA TROŠKOVA -->
-  <div id="vtab_historija" style="display:none">
-    <div class="card-title">Historija troškova</div>
+  <div id="vtab_istorija" style="display:none">
+    <div class="card-title">Istorija troškova</div>
     <div id="v_hist_list" style="margin-bottom:12px"></div>
     <div class="sec-title">Dodaj trošak</div>
     <div class="row2">
@@ -366,7 +366,7 @@ function exportCSV(){
 }
 function exportTroskCSV(){
   var rows=[['Reg','Model','Datum','Vrsta','Iznos','Opis']];
-  vozila.forEach(function(v){(v.historija||[]).forEach(function(h){rows.push([v.reg,v.model||'',h.dat,h.tip,h.iznos,h.opis||'']);});});
+  vozila.forEach(function(v){(v.istorija||[]).forEach(function(h){rows.push([v.reg,v.model||'',h.dat,h.tip,h.iznos,h.opis||'']);});});
   dlCSV(rows,'fleet_troskovi_'+today()+'.csv');
 }
 function dlCSV(rows,fn){
@@ -502,8 +502,8 @@ function renderV(){
     return'<div class="vcard" onclick="editV('+v.id+')">'
       +'<div class="vcard-top"><div><div class="vcard-reg">'+v.reg+'</div><div class="vcard-model">'+(v.model||'')+(v.god?' · '+v.god:'')+'</div></div>'
       +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
-      +'<span class="badge '+(v.tip==='lizing'?'b-purple':'b-blue')+'">'+(v.tip==='lizing'?'Lizing':'Vlastito')+'</span>'
-      +(gt?'<span class="badge '+(gt==='zimske'?'b-snow':gt==='ljetnje'?'b-amber':'b-gray')+'">'+(gt==='zimske'?'❄️ Zimske':gt==='ljetnje'?'☀️ Ljetnje':'🔄 Cjelogod.')+'</span>':'')
+      +'<span class="badge '+(v.tip==='lizing'?'b-purple':'b-blue')+'">'+(v.tip==='lizing'?'Lizing':'U vlasništvu')+'</span>'
+      +(gt?'<span class="badge '+(gt==='zimske'?'b-snow':gt==='ljetnje'?'b-amber':'b-gray')+'">'+(gt==='zimske'?'❄️ Zimske':gt==='ljetnje'?'☀️ Ljetnje':'🔄 Svesez.')+'</span>':'')
       +'</div></div>'
       +(kn?'<div class="vcard-client">👔 '+kn+(v.ug_do?' · do '+v.ug_do:'')+'</div>':'')
       +'<div style="font-size:12px;margin-top:5px;display:flex;gap:10px;flex-wrap:wrap">'
@@ -542,8 +542,10 @@ function openAddK(){
   editKId=null;
   document.getElementById('moK_t').textContent='Dodaj klijenta';
   document.getElementById('k_del_btn').style.display='none';
-  ['k_naziv','k_kontakt','k_tel','k_email','k_pib','k_nap'].forEach(function(id){document.getElementById(id).value='';});
+  ['k_naziv','k_kontakt','k_tel','k_email','k_pib'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('k_nap').value='';
   document.getElementById('moK').classList.add('open');
+  setTimeout(function(){document.getElementById('k_naziv').focus();},200);
 }
 function editK(id){
   var k=klijenti.find(function(x){return x.id===id;});if(!k)return;
@@ -564,6 +566,7 @@ function saveK(){
   if(editKId){var i=klijenti.findIndex(function(x){return x.id===editKId;});klijenti[i]=obj;}
   else klijenti.push(obj);
   closeM('moK');save();buildKSelect();renderK();
+  init();
 }
 function delK(){
   if(!editKId||!confirm('Obrisati klijenta? Vozila ostaju bez klijenta.'))return;
@@ -574,18 +577,18 @@ function delK(){
 
 // VOZILO MODAL TABS
 function setVTab(t,btn){
-  ['osnovno','finansije','datumi','historija'].forEach(function(x){document.getElementById('vtab_'+x).style.display=x===t?'block':'none';});
+  ['osnovno','finansije','datumi','istorija'].forEach(function(x){document.getElementById('vtab_'+x).style.display=x===t?'block':'none';});
   document.querySelectorAll('#moV .tab-bar .tab').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
-  if(t==='historija'&&curVId)renderHistList();
+  if(t==='istorija'&&curVId)renderHistList();
 }
 
 // HISTORIJA TROŠKOVA
 function renderHistList(){
   var v=vozila.find(function(x){return x.id===curVId;});
   var el=document.getElementById('v_hist_list');
-  if(!v||!v.historija||!v.historija.length){el.innerHTML='<div style="text-align:center;color:var(--t3);font-size:13px;padding:12px">Nema unesenih troškova</div>';return;}
-  var sorted=[...v.historija].sort(function(a,b){return String(b.dat).localeCompare(String(a.dat));});
+  if(!v||!v.istorija||!v.istorija.length){el.innerHTML='<div style="text-align:center;color:var(--t3);font-size:13px;padding:12px">Nema unesenih troškova</div>';return;}
+  var sorted=[...v.istorija].sort(function(a,b){return String(b.dat).localeCompare(String(a.dat));});
   var ukupno=sorted.reduce(function(s,h){return s+Number(h.iznos||0);},0);
   el.innerHTML='<div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px">Ukupno: '+eur(ukupno)+'</div>'+
     sorted.map(function(h,i){
@@ -597,18 +600,18 @@ function renderHistList(){
 function addHist(){
   var v=vozila.find(function(x){return x.id===curVId;});if(!v)return alert('Sačuvaj vozilo prvo!');
   var iznos=fv('h_iznos');if(!iznos)return alert('Unesite iznos!');
-  if(!v.historija)v.historija=[];
-  v.historija.push({dat:sv('h_dat')||today(),tip:sv('h_tip'),iznos:iznos,opis:sv('h_opis')});
+  if(!v.istorija)v.istorija=[];
+  v.istorija.push({dat:sv('h_dat')||today(),tip:sv('h_tip'),iznos:iznos,opis:sv('h_opis')});
   document.getElementById('h_iznos').value='';document.getElementById('h_opis').value='';
   save();renderHistList();
 }
 function delHist(idx){
   var v=vozila.find(function(x){return x.id===curVId;});if(!v)return;
   // Find by original index in sorted array - use splice on original
-  var sorted=[...v.historija].sort(function(a,b){return String(b.dat).localeCompare(String(a.dat));});
+  var sorted=[...v.istorija].sort(function(a,b){return String(b.dat).localeCompare(String(a.dat));});
   var item=sorted[idx];
-  var origIdx=v.historija.findIndex(function(h){return h===item;});
-  if(origIdx>=0)v.historija.splice(origIdx,1);
+  var origIdx=v.istorija.findIndex(function(h){return h===item;});
+  if(origIdx>=0)v.istorija.splice(origIdx,1);
   save();renderHistList();
 }
 
@@ -678,7 +681,7 @@ function saveV(){
     reg_c:fv('v_reg_c'),kasko:fv('v_kasko'),servis:fv('v_servis'),gume_c:fv('v_gume_c'),ostalo:fv('v_ostalo'),
     ug_od:sv('v_ug_od'),ug_do:sv('v_ug_do'),liz_do:sv('v_liz_do'),
     reg_do:sv('v_reg_do'),kasko_do:sv('v_kasko_do'),servis_do:sv('v_servis_do'),
-    historija:editVId?(vozila.find(function(x){return x.id===editVId;})||{}).historija||[]:[]
+    istorija:editVId?(vozila.find(function(x){return x.id===editVId;})||{}).istorija||[]:[]
   };
   curVId=obj.id;
   if(editVId){var i=vozila.findIndex(function(x){return x.id===editVId;});vozila[i]=obj;}
@@ -703,8 +706,8 @@ function setRepTab(t,btn){
   if(t==='flota')renderRepF();
 }
 function buildRepSelects(){
-  document.getElementById('rep_v').innerHTML='<option value="">— Odaberi —</option>'+vozila.map(function(v){return'<option value="'+v.id+'">'+v.reg+' '+(v.model||'')+'</option>';}).join('');
-  document.getElementById('rep_k').innerHTML='<option value="">— Odaberi —</option>'+klijenti.map(function(k){return'<option value="'+k.id+'">'+k.naziv+'</option>';}).join('');
+  document.getElementById('rep_v').innerHTML='<option value="">— Izaberi —</option>'+vozila.map(function(v){return'<option value="'+v.id+'">'+v.reg+' '+(v.model||'')+'</option>';}).join('');
+  document.getElementById('rep_k').innerHTML='<option value="">— Izaberi —</option>'+klijenti.map(function(k){return'<option value="'+k.id+'">'+k.naziv+'</option>';}).join('');
 }
 function repRow(n,v,cls){if(!n)return'';return'<div class="rep-row '+(cls||'')+'"><span class="rn">'+n+'</span><span class="rv">'+v+'</span></div>';}
 function renderRepV(){
@@ -715,11 +718,11 @@ function renderRepV(){
   var godT=Number(v.reg_c||0)+Number(v.kasko||0)+Number(v.servis||0)+Number(v.gume_c||0)+Number(v.ostalo||0);
   var mesTros=Number(v.liz_rata||0)+godT/12;
   var prof=Number(v.rata_k||0)-mesTros;
-  var histUk=(v.historija||[]).reduce(function(s,h){return s+Number(h.iznos||0);},0);
+  var histUk=(v.istorija||[]).reduce(function(s,h){return s+Number(h.iznos||0);},0);
   var kn=getKName(v.klijent_id);
   el.innerHTML='<div class="card">'
     +repRow('Registracija',v.reg)+repRow('Model',v.model||'—')+repRow('Godište',v.god||'—')
-    +repRow('Vlasništvo',v.tip==='lizing'?'Lizing':'Vlastito')+repRow('Klijent',kn||'—')
+    +repRow('Vlasništvo',v.tip==='lizing'?'Lizing':'U vlasništvu')+repRow('Klijent',kn||'—')
     +repRow('Ugovor',( v.ug_od||'')+(v.ug_do?' → '+v.ug_do:''))
     +'<hr>'
     +repRow('Rata klijenta / mj',eur(v.rata_k||0))
@@ -734,9 +737,9 @@ function renderRepV(){
     +'<hr>'
     +repRow('Neto profit / mj',eur(prof),'sum '+(prof>=0?'pos':'neg'))
     +repRow('Neto profit / god',eur(prof*12),prof>=0?'pos':'neg')
-    +(histUk?'<hr>'+repRow('Stvarni troškovi (historija)',eur(histUk)):'')
+    +(histUk?'<hr>'+repRow('Stvarni troškovi (istorija)',eur(histUk)):'')
     +'<hr>'
-    +repRow('Gume',v.gume_tip?(v.gume_tip==='zimske'?'❄️ Zimske':v.gume_tip==='ljetnje'?'☀️ Ljetnje':'🔄 Cjelogodišnje')+(v.gume_dat?' ('+v.gume_dat+')':''):'—')
+    +repRow('Gume',v.gume_tip?(v.gume_tip==='zimske'?'❄️ Zimske':v.gume_tip==='ljetnje'?'☀️ Ljetnje':'🔄 Svesezonce')+(v.gume_dat?' ('+v.gume_dat+')':''):'—')
     +repRow('Reg. do',v.reg_do||'—')+repRow('Kasko do',v.kasko_do||'—')+repRow('Servis do',v.servis_do||'—')
     +(v.nap?repRow('Napomena',v.nap):'')
     +'</div>';
@@ -764,18 +767,18 @@ function renderRepK(){
 function renderRepF(){
   var ukRata=vozila.reduce(function(s,v){return s+Number(v.rata_k||0);},0);
   var ukTros=vozila.reduce(function(s,v){return s+Number(v.liz_rata||0)+((Number(v.reg_c||0)+Number(v.kasko||0)+Number(v.servis||0)+Number(v.gume_c||0)+Number(v.ostalo||0))/12);},0);
-  var ukHistTros=vozila.reduce(function(s,v){return s+((v.historija||[]).reduce(function(s2,h){return s2+Number(h.iznos||0);},0));},0);
+  var ukHistTros=vozila.reduce(function(s,v){return s+((v.istorija||[]).reduce(function(s2,h){return s2+Number(h.iznos||0);},0));},0);
   var liz=vozila.filter(function(v){return v.tip==='lizing';}).length;
   var el=document.getElementById('rep_f_content');
   el.innerHTML='<div class="card">'
-    +repRow('Ukupno vozila',vozila.length)+repRow('Na lizingu',liz)+repRow('Vlastito',vozila.length-liz)
+    +repRow('Ukupno vozila',vozila.length)+repRow('Na lizingu',liz)+repRow('U vlasništvu',vozila.length-liz)
     +repRow('Aktivnih klijenata',klijenti.length)
     +'<hr>'
     +repRow('Ukupni prihod / mj',eur(ukRata),'pos')
     +repRow('Ukupni troškovi / mj',eur(ukTros))
     +repRow('Neto profit / mj',eur(ukRata-ukTros),'sum '+(ukRata-ukTros>=0?'pos':'neg'))
     +repRow('Neto profit / god',eur((ukRata-ukTros)*12),(ukRata-ukTros)>=0?'pos':'neg')
-    +(ukHistTros?'<hr>'+repRow('Stvarni troškovi ukupno (historija)',eur(ukHistTros)):'')
+    +(ukHistTros?'<hr>'+repRow('Stvarni troškovi ukupno (istorija)',eur(ukHistTros)):'')
     +'</div>';
 }
 
