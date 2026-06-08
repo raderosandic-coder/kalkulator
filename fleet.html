@@ -22,7 +22,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--t)
 .card{background:var(--w);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
 .card-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
 /* METRICS */
-.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;min-height:80px;}
 .mc{background:var(--w);border:1px solid var(--border);border-radius:10px;padding:12px;}
 .mc-l{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
 .mc-v{font-size:22px;font-weight:700;}
@@ -520,6 +520,7 @@ function showPg(p){
   document.querySelectorAll('.bni').forEach(function(x){x.classList.remove('active');});
   document.getElementById('pg-'+p).classList.add('active');
   document.getElementById('bn-'+p).classList.add('active');
+  if(p==='pregled'){renderMetrics();renderAlerts();checkTires();}
   if(p==='vozila')renderV();
   if(p==='upozorenja')renderAlertsPage();
   if(p==='izvjestaji'){buildRepSelect();}
