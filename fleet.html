@@ -148,6 +148,11 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
       <label class="btn btn-full" style="cursor:pointer;justify-content:center">📂 Učitaj backup<input type="file" accept=".json" onchange="importBackup(this)" style="display:none"></label>
     </div>
     <div class="card">
+      <div class="card-title">Test prikaza</div>
+      <button class="btn btn-full" onclick="testTire()" style="margin-bottom:8px">❄️ Prikaži baner zimskih guma</button>
+      <button class="btn btn-full" onclick="hideTire()">✕ Sakrij baner</button>
+    </div>
+    <div class="card">
       <div class="card-title">O aplikaciji</div>
       <div style="font-size:13px;color:var(--t2)">Fleet Manager — RR<br>Praćenje voznog parka</div>
     </div>
@@ -215,6 +220,15 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <div class="f"><label>Kasko važi do</label><input type="date" id="v_kasko_do"></div>
     <div class="f"><label>Sljedeći servis</label><input type="date" id="v_servis_do"></div>
     <div class="f"><label>Napomena</label><input id="v_nap" placeholder="..."></div>
+    <div class="f"><label>Trenutne gume</label>
+      <select id="v_gume_tip">
+        <option value="">— Nije uneseno —</option>
+        <option value="ljetnje">☀️ Ljetnje</option>
+        <option value="zimske">❄️ Zimske</option>
+        <option value="cjelogodisnje">🔄 Cjelogodišnje</option>
+      </select>
+    </div>
+    <div class="f"><label>Montirane (datum)</label><input type="date" id="v_gume_dat"></div>
   </div>
 
   <div class="mf">
@@ -278,8 +292,10 @@ function getAlerts(v){
   if(v.ugovor_do){if(du<0)alerts.push({tip:'ugovor',tekst:'Ugovor istekao',boja:'red',days:du});else if(du<=60)alerts.push({tip:'ugovor',tekst:'Ugovor ističe za '+du+'d',boja:'amber',days:du});}
   // Gume
   var m=new Date().getMonth()+1,d2=new Date().getDate();
-  var zimske=(m===11&&d2>=15)||m===12||m<=3||(m===4&&d2<1);
-  if(zimske)alerts.push({tip:'gume',tekst:'Zimske gume obavezne',boja:'snow',days:0});
+  var zimskaSezona=(m===11&&d2>=15)||m===12||m<=3||(m===4&&d2<1);
+  if(zimskaSezona&&v.gume_tip==='ljetnje')alerts.push({tip:'gume',tekst:'⚠️ Ljetnje gume — sezona zimskih!',boja:'red',days:-1});
+  else if(zimskaSezona&&!v.gume_tip)alerts.push({tip:'gume',tekst:'Zimske gume obavezne — tip nije unesen',boja:'amber',days:0});
+  else if(!zimskaSezona&&v.gume_tip==='zimske')alerts.push({tip:'gume',tekst:'Zimske gume — razmisli o ljetnjim',boja:'amber',days:0});
   return alerts;
 }
 function isTiresSeason(){var m=new Date().getMonth()+1,d=new Date().getDate();return(m===11&&d>=15)||m===12||m<=3||(m===4&&d<1);}
@@ -419,6 +435,8 @@ function editV(id){
   document.getElementById('v_kasko_do').value=v.kasko_do||'';
   document.getElementById('v_servis_do').value=v.servis_do||'';
   document.getElementById('v_nap').value=v.nap||'';
+  document.getElementById('v_gume_tip').value=v.gume_tip||'';
+  document.getElementById('v_gume_dat').value=v.gume_dat||'';
   toggleLizing();
   document.getElementById('moV').classList.add('open');
 }
@@ -488,6 +506,7 @@ function renderRep(){
     ['Kasko važi do',v.kasko_do||'—',''],
     ['Sljedeći servis',v.servis_do||'—',''],
     v.nap?['Napomena',v.nap,'']:null,
+    v.gume_tip?['Trenutne gume',(v.gume_tip==='zimske'?'❄️ Zimske':v.gume_tip==='ljetnje'?'☀️ Ljetnje':'🔄 Cjelogodišnje')+(v.gume_dat?' ('+v.gume_dat+')':''),'']:null,
   ];
   el.innerHTML='<div class="card">'+rows.filter(Boolean).map(function(r){
     if(r[2]==='hr')return'<hr>';
@@ -508,6 +527,15 @@ function showPg(p){
 function closeM(id){document.getElementById(id).classList.remove('open');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.mo.open').forEach(function(m){m.classList.remove('open');});});
 
+function testTire(){
+  var b=document.getElementById('tire_banner');
+  b.classList.add('show');
+  document.getElementById('tire_banner_info').textContent='Zimske gume obavezne od 15.11 do 01.04 — provjeri sva vozila!';
+  showPg('pregled');
+}
+function hideTire(){
+  document.getElementById('tire_banner').classList.remove('show');
+}
 load();
 </script>
 </body>
