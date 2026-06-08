@@ -397,11 +397,17 @@ function getAlerts(v){
 
 // INIT
 function init(){
-  renderMetrics();renderAlerts();renderAlertsPage();renderV();renderK();
-  buildKSelect();buildRepSelects();checkTires();
+  renderMetrics();
+  renderAlerts();
+  renderAlertsPage();
+  renderV();
+  renderK();
+  buildKSelect();
+  buildRepSelects();
+  checkTires();
   var tc=vozila.reduce(function(s,v){return s+getAlerts(v).length;},0);
   document.getElementById('tb_ac').textContent=tc;
-  renderCharts();
+  try{renderCharts();}catch(e){}
   checkNotifications();
 }
 
@@ -423,11 +429,13 @@ function renderMetrics(){
     var godT=(Number(v.reg_c||0)+Number(v.kasko||0)+Number(v.servis||0)+Number(v.gume_c||0)+Number(v.ostalo||0));
     return s+Number(v.liz_rata||0)+godT/12;
   },0);
-  document.getElementById('metrics').innerHTML=
+  var prof=ukPrihod-ukTros;
+  var el=document.getElementById('metrics');
+  el.innerHTML=
     mc('Ukupno vozila',tot,'#1A2A6C')+
     mc('Na lizingu',liz,'#6d28d9')+
     mc('Prihod/mj',eur(ukPrihod),'#1a7a3c')+
-    mc('Profit/mj',eur(ukPrihod-ukTros),ukPrihod-ukTros>=0?'#1a7a3c':'#b91c1c')+
+    mc('Profit/mj',(prof<0?'-':'')+eur(prof),prof>=0?'#1a7a3c':'#b91c1c')+
     mc('Hitni alarmi',red,'#b91c1c')+
     mc('Upozorenja',warn,'#b45309');
 }
@@ -676,7 +684,9 @@ function saveV(){
   if(editVId){var i=vozila.findIndex(function(x){return x.id===editVId;});vozila[i]=obj;}
   else vozila.push(obj);
   editVId=obj.id;
-  save();init();
+  save();
+  init();
+  alert('Vozilo sačuvano!');
 }
 function delV(){
   if(!editVId||!confirm('Obrisati vozilo?'))return;
@@ -775,7 +785,7 @@ function showPg(p){
   document.querySelectorAll('.bni').forEach(function(x){x.classList.remove('active');});
   document.getElementById('pg-'+p).classList.add('active');
   document.getElementById('bn-'+p).classList.add('active');
-  if(p==='pregled'){renderMetrics();renderAlerts();checkTires();renderCharts();}
+  if(p==='pregled'){renderMetrics();renderAlerts();checkTires();try{renderCharts();}catch(e){}}
   if(p==='vozila'){buildKSelect();renderV();}
   if(p==='klijenti')renderK();
   if(p==='upozorenja')renderAlertsPage();
